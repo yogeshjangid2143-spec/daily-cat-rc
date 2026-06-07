@@ -108,6 +108,7 @@ export default function ScoreChart({ data }: ScoreChartProps) {
             dataKey="scorePercent"
             stroke="#4F46E5"
             strokeWidth={2}
+            isAnimationActive={false}
             dot={{ r: 4, strokeWidth: 1, fill: '#FFFFFF', stroke: '#4F46E5' }}
             activeDot={{ r: 6, strokeWidth: 0, fill: '#4F46E5' }}
             className="dark:stroke-[#6366F1]"
