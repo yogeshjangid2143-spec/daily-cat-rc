@@ -112,7 +112,12 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         {/* Left Column: Passage Panel */}
         {showPassage && (
           <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
-            <PassagePanel passage={passage} />
+            <PassagePanel 
+              passage={passage} 
+              showPassageToggle={true}
+              isPassageHidden={!showPassage}
+              onTogglePassage={() => setShowPassage(!showPassage)}
+            />
           </div>
         )}
 
@@ -146,12 +151,14 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0">
              <div className="flex items-center gap-3">
                <span className="uppercase tracking-wider">Question Analysis</span>
-               <button 
-                 onClick={() => setShowPassage(!showPassage)}
-                 className="flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
-               >
-                 {showPassage ? <><EyeOff className="w-3.5 h-3.5" /> Hide Passage</> : <><Eye className="w-3.5 h-3.5" /> Show Passage</>}
-               </button>
+               {!showPassage && (
+                 <button 
+                   onClick={() => setShowPassage(true)}
+                   className="flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
+                 >
+                   <Eye className="w-3.5 h-3.5" /> Show Passage
+                 </button>
+               )}
              </div>
              <span className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5 bg-gray-100 dark:bg-black/20 px-2.5 py-1 rounded">
                <Clock className="w-3.5 h-3.5 text-gray-400" />
