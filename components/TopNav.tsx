@@ -133,7 +133,7 @@ export default function TopNav() {
                   : 'text-gray-500 hover:text-[#1A1A18] dark:hover:text-[#FAFAF9]'
               }`}
             >
-              History
+              Passage Archive
             </Link>
 
             <Link
@@ -211,7 +211,7 @@ export default function TopNav() {
                     </Link>
 
                     <Link href="/history" onClick={() => setMenuOpen(false)} className="block md:hidden px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-black/20">
-                      History
+                      Passage Archive
                     </Link>
 
                     <Link href="/leaderboard" onClick={() => setMenuOpen(false)} className="block md:hidden px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-black/20">
