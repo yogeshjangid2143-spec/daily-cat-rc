@@ -16,15 +16,18 @@ export default function TimerDisplay({ onTick, active }: TimerDisplayProps) {
     if (!active) return;
 
     const interval = setInterval(() => {
-      setSeconds((prev) => {
-        const next = prev + 1;
-        if (onTick) onTick(next);
-        return next;
-      });
+      setSeconds((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [active, onTick]);
+  }, [active]);
+
+  // Safely call onTick when seconds changes
+  useEffect(() => {
+    if (active && seconds > 0 && onTick) {
+      onTick(seconds);
+    }
+  }, [seconds, active, onTick]);
 
   const showWarning = seconds >= 18 * 60; // 18 minutes
 
