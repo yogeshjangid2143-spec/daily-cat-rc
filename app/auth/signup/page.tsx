@@ -42,8 +42,18 @@ export default function SignupPage() {
     };
     checkAuth();
 
+    // The most reliable way to detect cross-tab login is the native 'storage' event
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    window.addEventListener('storage', handleStorageChange);
+    // Also listen to our custom event just in case
+    window.addEventListener('user-state-change', handleStorageChange);
+
     return () => {
       if (authListener) authListener.unsubscribe();
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('user-state-change', handleStorageChange);
     };
   }, [router]);
 
