@@ -8,6 +8,7 @@ import { getMockStorage, mockDb } from '@/lib/supabase';
 import { Passage, Question, Attempt } from '@/types';
 import ScoreRing from '@/components/ScoreRing';
 import QuestionCard from '@/components/QuestionCard';
+import PassagePanel from '@/components/PassagePanel';
 import { formatTime } from '@/lib/utils';
 import { toPng } from 'html-to-image';
 
@@ -102,186 +103,112 @@ export default function ResultsPage() {
   const scorePercent = Math.round((attempt.score / attempt.total_questions) * 100);
 
   return (
-    <div className="flex-1 max-w-4xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
+    <div className="flex-1 flex flex-col min-h-[calc(100vh-4rem)]">
       
-      {/* Top Navigation Back to Dashboard */}
-      <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-4 select-none">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-[#1A1A18] dark:hover:text-[#FAFAF9] font-mono transition-colors"
-        >
-          <ArrowLeft className="w-4.5 h-4.5" />
-          <span>Dashboard</span>
-        </Link>
-        <span className="font-mono text-xs text-gray-400">
-          Attempted at {new Date(attempt.completed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </span>
-      </div>
-
-      {/* Hero Score Analytics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+      {/* Main Split Layout */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-7xl w-full mx-auto px-4 md:px-6 py-6 gap-6 items-stretch">
         
-        {/* Left Card: Score Ring (SVG) */}
-        <div className="md:col-span-4 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col items-center justify-center text-center gap-4">
-          <h3 className="font-mono text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-            Your score
-          </h3>
-          <ScoreRing score={attempt.score} total={attempt.total_questions} size={150} strokeWidth={11} />
-          <p className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-            {scorePercent >= 80 ? 'Exceptional Work!' : scorePercent >= 60 ? 'Good Effort!' : 'Keep Practicing'}
-          </p>
+        {/* Left Column: Passage Panel */}
+        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
+          <PassagePanel passage={passage} />
         </div>
 
-        {/* Right Card: Stats & Performance details */}
-        <div className="md:col-span-8 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col justify-between gap-6">
-          <div>
-            <h3 className="font-mono text-xs font-bold text-[#4F46E5] dark:text-[#6366F1] uppercase tracking-wider mb-2">
-              Performance Indicators
-            </h3>
-            <h2 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-              {passage.title}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-6">
-            {/* Time Taken */}
-            <div className="flex flex-col gap-1">
-              <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                <Clock className="w-3.5 h-3.5" />
-                Time Elapsed
-              </span>
-              <span className="font-mono text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-                {formatTime(attempt.time_taken_seconds)}
-              </span>
-            </div>
-
-            {/* Time on Current Question */}
-            <div className="flex flex-col gap-1">
-              <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                <Clock className="w-3.5 h-3.5" />
-                Time on Q{currentQuestionIndex + 1}
-              </span>
-              <span className="font-mono text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-                {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id]
-                  ? formatTime(attempt.question_times[questions[currentQuestionIndex].id])
-                  : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
-              </span>
-            </div>
-
-            {/* Percentile benchmark */}
-            <div className="flex flex-col gap-1">
-              <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                <Users className="w-3.5 h-3.5" />
-                Today's Rank
-              </span>
-              <span className="font-mono text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-                Top {100 - percentile}%
-              </span>
-            </div>
-
-            {/* Status note */}
-            <div className="col-span-2 sm:col-span-2 flex flex-col gap-1">
-              <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                <Trophy className="w-3.5 h-3.5" />
-                Percentile
-              </span>
-              <span className="font-sans text-xs text-green-600 dark:text-green-400 font-semibold">
-                Better than {percentile}% of users today!
-              </span>
-            </div>
-          </div>
-
-          {/* Share & Leaderboard Actions */}
-          <div className="flex items-center gap-3 pt-2">
-            <button
-              onClick={() => setShowShareModal(true)}
-              className="px-4 py-2 bg-[#4F46E5] hover:bg-[#4338CA] dark:bg-[#6366F1] dark:hover:bg-[#4F46E5] text-white font-mono font-semibold text-xs rounded transition-colors flex items-center gap-1.5"
-            >
-              <Share2 className="w-4 h-4" />
-              Share Scorecard
-            </button>
-            <Link
-              href="/leaderboard"
-              className="px-4 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-semibold text-xs rounded transition-colors flex items-center gap-1"
-            >
-              <span>View Leaderboard</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Explanations Header */}
-      <div className="flex flex-col gap-2 mt-4 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3">
-        <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-          Question Analysis & Explanations
-        </h3>
-        <p className="font-sans text-xs text-gray-400 dark:text-gray-500">
-          Review correct answers and read option reasoning to improve your scores.
-        </p>
-      </div>
-
-      {/* Explanations Single View */}
-      <div className="flex flex-col gap-4">
-        {questions.length > 0 && (
-          <QuestionCard
-            key={questions[currentQuestionIndex].id}
-            question={questions[currentQuestionIndex]}
-            questionIndex={currentQuestionIndex}
-            selectedAnswer={attempt.answers[questions[currentQuestionIndex].id]}
-            isCompleted={true}
-            correctAnswer={questions[currentQuestionIndex].correct_option}
-            explanation={questions[currentQuestionIndex].explanation}
-          />
-        )}
-
-        {/* Navigation Block */}
-        <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 pb-2 flex items-center justify-between shrink-0">
+        {/* Right Column: Questions & Score Panel */}
+        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:pl-2 animate-slide-in-right">
           
-          {/* Pagination Controls */}
-          <div className="flex items-center gap-1 sm:gap-2">
-            <button
-              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
-              disabled={currentQuestionIndex === 0}
-              className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
-            >
-              ←
-            </button>
-            
-            <div className="flex gap-1 overflow-x-auto">
-              {questions.map((q, idx) => {
-                const isSelected = attempt.answers[q.id];
-                const isCorrect = isSelected === q.correct_option;
-                
-                let buttonStyle = 'border border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20';
-                if (idx === currentQuestionIndex) {
-                  buttonStyle = 'bg-[#1A1A18] text-white dark:bg-[#FAFAF9] dark:text-black';
-                } else if (isCorrect) {
-                  buttonStyle = 'border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20';
-                } else if (isSelected && !isCorrect) {
-                  buttonStyle = 'border-rose-500 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20';
-                }
-
-                return (
-                  <button
-                    key={q.id}
-                    onClick={() => setCurrentQuestionIndex(idx)}
-                    className={`min-w-[1.75rem] h-7 rounded flex items-center justify-center text-xs font-mono font-semibold transition-colors ${buttonStyle}`}
-                  >
-                    {idx + 1}
-                  </button>
-                );
-              })}
+          {/* Condensed Score Card / Performance Header */}
+          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-4 bg-white dark:bg-[#121211] mb-5 shrink-0 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <ScoreRing score={attempt.score} total={attempt.total_questions} size={60} strokeWidth={6} />
+              <div className="flex flex-col">
+                <span className="font-serif text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+                  {scorePercent >= 80 ? 'Exceptional Work!' : scorePercent >= 60 ? 'Good Effort!' : 'Keep Practicing'}
+                </span>
+                <span className="font-mono text-xs text-green-600 dark:text-green-400 font-semibold">
+                  Better than {percentile}% today
+                </span>
+              </div>
             </div>
+            
+            <div className="flex flex-col items-end gap-1 text-right">
+               <span className="font-mono text-xs text-gray-500">Total Time: {formatTime(attempt.time_taken_seconds)}</span>
+               <div className="flex gap-2 mt-1">
+                 <button onClick={() => setShowShareModal(true)} className="p-1 hover:bg-gray-100 dark:hover:bg-black/20 rounded" title="Share Scorecard"><Share2 className="w-4 h-4 text-[#4F46E5] dark:text-[#6366F1]" /></button>
+                 <Link href="/leaderboard" className="p-1 hover:bg-gray-100 dark:hover:bg-black/20 rounded" title="View Leaderboard"><Trophy className="w-4 h-4 text-amber-500" /></Link>
+                 <Link href="/dashboard" className="p-1 hover:bg-gray-100 dark:hover:bg-black/20 rounded" title="Back to Dashboard"><ArrowLeft className="w-4 h-4 text-gray-500" /></Link>
+               </div>
+            </div>
+          </div>
 
-            <button
-              onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
-              disabled={currentQuestionIndex === questions.length - 1}
-              className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
-            >
-              →
-            </button>
+          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0">
+             <span className="uppercase tracking-wider">Question Analysis</span>
+             <span className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5 bg-gray-100 dark:bg-black/20 px-2.5 py-1 rounded">
+               <Clock className="w-3.5 h-3.5 text-gray-400" />
+               Time on Q{currentQuestionIndex + 1}: {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id] ? formatTime(attempt.question_times[questions[currentQuestionIndex].id]) : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
+             </span>
+          </div>
+
+          {/* Scrollable Question Area */}
+          <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2 pb-2">
+            {questions.length > 0 && (
+              <QuestionCard
+                key={questions[currentQuestionIndex].id}
+                question={questions[currentQuestionIndex]}
+                questionIndex={currentQuestionIndex}
+                selectedAnswer={attempt.answers[questions[currentQuestionIndex].id]}
+                isCompleted={true}
+                correctAnswer={questions[currentQuestionIndex].correct_option}
+                explanation={questions[currentQuestionIndex].explanation}
+              />
+            )}
+          </div>
+
+          {/* Navigation Block (Anchored at Bottom) */}
+          <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 pb-2 flex items-center justify-between shrink-0 mt-2">
+            {/* Pagination Controls */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              <button
+                onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+                disabled={currentQuestionIndex === 0}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+              >
+                ←
+              </button>
+              
+              <div className="flex gap-1 overflow-x-auto">
+                {questions.map((q, idx) => {
+                  const isSelected = attempt.answers[q.id];
+                  const isCorrect = isSelected === q.correct_option;
+                  
+                  let buttonStyle = 'border border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20';
+                  if (idx === currentQuestionIndex) {
+                    buttonStyle = 'bg-[#1A1A18] text-white dark:bg-[#FAFAF9] dark:text-black';
+                  } else if (isCorrect) {
+                    buttonStyle = 'border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20';
+                  } else if (isSelected && !isCorrect) {
+                    buttonStyle = 'border-rose-500 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20';
+                  }
+
+                  return (
+                    <button
+                      key={q.id}
+                      onClick={() => setCurrentQuestionIndex(idx)}
+                      className={`min-w-[1.75rem] h-7 rounded flex items-center justify-center text-xs font-mono font-semibold transition-colors ${buttonStyle}`}
+                    >
+                      {idx + 1}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
+                disabled={currentQuestionIndex === questions.length - 1}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+              >
+                →
+              </button>
+            </div>
           </div>
         </div>
       </div>
