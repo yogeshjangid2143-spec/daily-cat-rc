@@ -192,27 +192,18 @@ export default function Dashboard() {
 
         setTypeBreakdown(breakdown);
 
-        // Chart Data prep (daily accuracy)
+        // Chart Data prep (individual passages, maintaining chronological order)
         const sortedAttempts = [...userAttempts].sort(
           (a, b) => new Date(a.completed_at).getTime() - new Date(b.completed_at).getTime()
         );
         
-        const dailyStats: Record<string, { score: number; total: number }> = {};
-        sortedAttempts.forEach(a => {
-          const date = new Date(a.completed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-          if (!dailyStats[date]) {
-            dailyStats[date] = { score: 0, total: 0 };
-          }
-          dailyStats[date].score += a.score;
-          dailyStats[date].total += a.total_questions;
-        });
-
-        const chartDataPoints = Object.keys(dailyStats).slice(-14).map(date => {
-          const stat = dailyStats[date];
+        const chartDataPoints = sortedAttempts.slice(-14).map((a, i) => {
+          const date = new Date(a.completed_at);
           return {
-            date,
-            scorePercent: Math.round((stat.score / stat.total) * 100),
-            rawScore: `${stat.score}/${stat.total}`,
+            date: `RC ${i + 1}`,
+            fullDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            scorePercent: Math.round((a.score / a.total_questions) * 100),
+            rawScore: `${a.score}/${a.total_questions}`,
           };
         });
 
@@ -229,8 +220,10 @@ export default function Dashboard() {
     
     // Ensure real-time updates when navigating back
     window.addEventListener('focus', initData);
+    window.addEventListener('user-state-change', initData);
     return () => {
       window.removeEventListener('focus', initData);
+      window.removeEventListener('user-state-change', initData);
     };
   }, [router]);
 

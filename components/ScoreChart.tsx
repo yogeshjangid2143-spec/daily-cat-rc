@@ -14,6 +14,7 @@ import {
 
 interface ChartDataPoint {
   date: string;
+  fullDate?: string;
   scorePercent: number;
   rawScore: string;
 }
@@ -26,7 +27,9 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] p-3 rounded shadow-none text-xs font-mono">
-        <p className="font-semibold text-gray-500 dark:text-gray-400 mb-1">{payload[0].payload.date}</p>
+        <p className="font-semibold text-gray-500 dark:text-gray-400 mb-1">
+          {payload[0].payload.fullDate || payload[0].payload.date}
+        </p>
         <p className="text-[#1A1A18] dark:text-[#FAFAF9]">
           Accuracy: <span className="font-bold text-[#4F46E5] dark:text-[#6366F1]">{payload[0].value}%</span>
         </p>

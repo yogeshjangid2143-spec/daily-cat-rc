@@ -101,6 +101,7 @@ export default function RCPage({ params }: { params: { id: string } }) {
     try {
       // API trigger or fallback to mock DB write
       await mockDb.submitAttempt(user.id, passage.id, answers, timeTaken, questionTimes);
+      window.dispatchEvent(new Event('user-state-change'));
       router.push(`/rc/${params.id}/results`);
     } catch (err) {
       console.error("Submission failed", err);
