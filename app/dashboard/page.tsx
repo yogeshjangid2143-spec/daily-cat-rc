@@ -14,12 +14,15 @@ import {
   ShieldAlert, 
   BookOpen,
   HelpCircle,
-  AlertTriangle
+  AlertTriangle,
+  Crown,
+  Lock
 } from 'lucide-react';
 import { getMockStorage, setMockStorage, mockDb, isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Profile, Attempt, Passage } from '../../types';
 import StreakWidget from '../../components/StreakWidget';
 import ScoreChart from '../../components/ScoreChart';
+import PremiumModal from '../../components/PremiumModal';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -28,6 +31,7 @@ export default function Dashboard() {
   const [todayAttempt, setTodayAttempt] = useState<Attempt | null>(null);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [stats, setStats] = useState({
     totalSolved: 0,
     bestScore: '0/5',
@@ -413,6 +417,48 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+          </div>
+          
+          {/* Locked Premium Feature Demo */}
+          <div className="relative border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:400ms] opacity-0 overflow-hidden group">
+            {/* Blurred Content */}
+            <div className="filter blur-[4px] opacity-40 transition-all duration-300 pointer-events-none select-none">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+                    Time per Question
+                  </h3>
+                  <p className="font-sans text-xs text-gray-400 dark:text-gray-500">
+                    Your average solving speed compared to top percentile
+                  </p>
+                </div>
+              </div>
+              <div className="h-32 flex items-end gap-2 px-2">
+                <div className="w-1/6 bg-indigo-200 rounded-t h-full" />
+                <div className="w-1/6 bg-indigo-300 rounded-t h-4/5" />
+                <div className="w-1/6 bg-indigo-400 rounded-t h-3/5" />
+                <div className="w-1/6 bg-indigo-500 rounded-t h-1/2" />
+                <div className="w-1/6 bg-indigo-600 rounded-t h-full" />
+                <div className="w-1/6 bg-indigo-700 rounded-t h-2/3" />
+              </div>
+            </div>
+
+            {/* Lock Overlay */}
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/20 dark:bg-black/20 backdrop-blur-[2px]">
+              <div className="text-center flex flex-col items-center">
+                <div className="w-12 h-12 bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] rounded-full flex items-center justify-center shadow-xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                  <Lock className="w-5 h-5 text-indigo-500" />
+                </div>
+                <h4 className="font-bold font-serif text-xl text-[#1A1A18] dark:text-[#FAFAF9] mb-1">Advanced Timing Analytics</h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 max-w-[200px] mb-4">Discover exactly where you bleed time during passages.</p>
+                <button
+                  onClick={() => setPremiumModalOpen(true)}
+                  className="bg-[#1A1A18] hover:bg-black dark:bg-[#FAFAF9] dark:hover:bg-white text-white dark:text-black font-mono font-bold text-xs px-5 py-2.5 rounded shadow-lg flex items-center gap-2 transition-all hover:-translate-y-0.5"
+                >
+                  <Crown className="w-3.5 h-3.5" />
+                  Unlock Pro Features
+                </button>
+              </div>
             </div>
           </div>
 
@@ -501,6 +547,8 @@ export default function Dashboard() {
         </div>
 
       </div>
+      
+      <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
     </div>
   );
 }

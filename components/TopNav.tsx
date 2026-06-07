@@ -3,15 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Flame, Snowflake, User, LogOut, Sun, Moon, Sparkles } from 'lucide-react';
+import { Flame, User, LogOut, Sun, Moon, Sparkles, Crown } from 'lucide-react';
 import { getMockStorage, setMockStorage, isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Profile } from '../types';
+import PremiumModal from './PremiumModal';
 
 export default function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -49,7 +51,7 @@ export default function TopNav() {
               currentUser = dbProfile as Profile;
               setMockStorage({ currentUser });
             } else {
-              currentUser = { name: session.user.user_metadata?.full_name || 'Reader', is_pro: false } as any;
+              currentUser = { name: session.user.user_metadata?.full_name || 'Reader', is_pro: false } as Profile;
             }
           }
         } else {
@@ -152,6 +154,16 @@ export default function TopNav() {
         {/* Right Side Buttons */}
         <div className="flex items-center gap-3 md:gap-4">
           
+          {mounted && user && (
+            <button
+              onClick={() => setPremiumModalOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 font-bold font-mono text-[10px] uppercase tracking-widest hover:bg-amber-500/20 transition-all hover:scale-105"
+            >
+              <Crown className="w-3 h-3" />
+              Upgrade to Pro
+            </button>
+          )}
+          
           {/* Dark Mode Switch */}
           <button
             onClick={toggleDarkMode}
@@ -179,6 +191,7 @@ export default function TopNav() {
                 >
                   <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full bg-[#E5E5E3] dark:bg-[#27272A] flex items-center justify-center text-sm font-bold text-[#1A1A18] dark:text-[#FAFAF9] overflow-hidden border border-[#E5E5E3] dark:border-[#27272A] block">
                     {user.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={user.avatar_url} alt={user.name || ''} className="w-full h-full object-cover" />
                     ) : (
                       <User className="w-4 h-4 text-gray-600 dark:text-gray-400" />
@@ -255,6 +268,7 @@ export default function TopNav() {
 
         </div>
       </div>
+      <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
     </nav>
   );
 }
