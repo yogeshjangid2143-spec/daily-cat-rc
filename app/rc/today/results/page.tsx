@@ -111,18 +111,20 @@ export default function ResultsPage() {
         
         {/* Left Column: Passage Panel */}
         {showPassage && (
-          <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
-            <PassagePanel 
-              passage={passage} 
-              showPassageToggle={true}
-              isPassageHidden={!showPassage}
-              onTogglePassage={() => setShowPassage(!showPassage)}
-            />
+          <div className="lg:col-span-6 pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in relative">
+            <div className="lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)] flex flex-col">
+              <PassagePanel 
+                passage={passage} 
+                showPassageToggle={true}
+                isPassageHidden={!showPassage}
+                onTogglePassage={() => setShowPassage(!showPassage)}
+              />
+            </div>
           </div>
         )}
 
         {/* Right Column: Questions & Score Panel */}
-        <div className={`${showPassage ? 'lg:col-span-6 lg:pl-2' : 'lg:col-span-8 lg:col-start-3'} flex flex-col h-full lg:max-h-[calc(100vh-8rem)] animate-slide-in-right transition-all duration-300`}>
+        <div className={`${showPassage ? 'lg:col-span-6 lg:pl-2' : 'lg:col-span-8 lg:col-start-3'} flex flex-col animate-slide-in-right transition-all duration-300`}>
           
           {/* Condensed Score Card / Performance Header */}
           <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-4 bg-white dark:bg-[#121211] mb-5 shrink-0 flex items-center justify-between">
@@ -214,7 +216,7 @@ export default function ResultsPage() {
           </div>
 
           {/* Scrollable Question Area */}
-          <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2 pb-2">
+          <div className="flex flex-col gap-5 flex-1 pr-2 pb-2">
             {questions.length > 0 && (
               <QuestionCard
                 key={questions[currentQuestionIndex].id}
