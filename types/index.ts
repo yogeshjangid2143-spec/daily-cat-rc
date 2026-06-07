@@ -10,7 +10,7 @@ export interface Profile {
   created_at: string;
 }
 
-export type TopicType = 'economics' | 'science' | 'literature' | 'social' | 'abstract';
+export type TopicType = 'economics' | 'science' | 'literature' | 'social' | 'abstract' | 'history';
 
 export interface Passage {
   id: string;
