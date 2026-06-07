@@ -148,41 +148,25 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0">
-             <div className="flex items-center gap-3">
-               <span className="uppercase tracking-wider">Question Analysis</span>
-               {!showPassage && (
-                 <button 
-                   onClick={() => setShowPassage(true)}
-                   className="flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
-                 >
-                   <Eye className="w-3.5 h-3.5" /> Show Passage
-                 </button>
-               )}
-             </div>
-             <span className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5 bg-gray-100 dark:bg-black/20 px-2.5 py-1 rounded">
-               <Clock className="w-3.5 h-3.5 text-gray-400" />
-               Time on Q{currentQuestionIndex + 1}: {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id] ? formatTime(attempt.question_times[questions[currentQuestionIndex].id]) : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
-             </span>
-          </div>
+          <div className="flex flex-col gap-4 shrink-0 mb-4">
+            <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 text-xs font-mono font-semibold text-gray-500">
+               <div className="flex items-center gap-3">
+                 <span className="uppercase tracking-wider">Question Analysis</span>
+                 {!showPassage && (
+                   <button 
+                     onClick={() => setShowPassage(true)}
+                     className="flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
+                   >
+                     <Eye className="w-3.5 h-3.5" /> Show Passage
+                   </button>
+                 )}
+               </div>
+               <span className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5 bg-gray-100 dark:bg-black/20 px-2.5 py-1 rounded">
+                 <Clock className="w-3.5 h-3.5 text-gray-400" />
+                 Time on Q{currentQuestionIndex + 1}: {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id] ? formatTime(attempt.question_times[questions[currentQuestionIndex].id]) : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
+               </span>
+            </div>
 
-          {/* Scrollable Question Area */}
-          <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2 pb-2">
-            {questions.length > 0 && (
-              <QuestionCard
-                key={questions[currentQuestionIndex].id}
-                question={questions[currentQuestionIndex]}
-                questionIndex={currentQuestionIndex}
-                selectedAnswer={attempt.answers[questions[currentQuestionIndex].id]}
-                isCompleted={true}
-                correctAnswer={questions[currentQuestionIndex].correct_option}
-                explanation={questions[currentQuestionIndex].explanation}
-              />
-            )}
-          </div>
-
-          {/* Navigation Block (Anchored at Bottom) */}
-          <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 pb-2 flex items-center justify-between shrink-0 mt-2">
             {/* Pagination Controls */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
@@ -228,6 +212,23 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               </button>
             </div>
           </div>
+
+          {/* Scrollable Question Area */}
+          <div className="flex flex-col gap-5 flex-1 overflow-y-auto pr-2 pb-2">
+            {questions.length > 0 && (
+              <QuestionCard
+                key={questions[currentQuestionIndex].id}
+                question={questions[currentQuestionIndex]}
+                questionIndex={currentQuestionIndex}
+                selectedAnswer={attempt.answers[questions[currentQuestionIndex].id]}
+                isCompleted={true}
+                correctAnswer={questions[currentQuestionIndex].correct_option}
+                explanation={questions[currentQuestionIndex].explanation}
+              />
+            )}
+          </div>
+
+
         </div>
       </div>
 
