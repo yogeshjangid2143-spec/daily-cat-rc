@@ -142,7 +142,7 @@ export default function Dashboard() {
             if (res && res.questions) {
               res.questions.forEach(q => {
                 typesMap[q.id] = q.question_type || 'inference';
-                correctMap[q.id] = q.correct_option;
+                correctMap[q.id] = q.correct_option || '';
               });
             }
           });
@@ -545,7 +545,7 @@ export default function Dashboard() {
           </div>
 
         </div>
-
+      </div>
       </div>
       
       <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
