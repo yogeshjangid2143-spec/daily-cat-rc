@@ -23,10 +23,10 @@ export default function NotFound() {
         {/* Text Content */}
         <div className="flex flex-col gap-4">
           <h1 className="text-5xl md:text-7xl font-serif font-black text-[#1A1A18] dark:text-[#FAFAF9] tracking-tight">
-            Lost in the Archives
+            Page Not Found
           </h1>
           <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-mono max-w-2xl mx-auto leading-relaxed">
-            The passage you are looking for has either been deleted, never existed, or is locked away in a different timeline. 
+            The page you are looking for has either been deleted, never existed, or is locked away in a different timeline. 
           </p>
         </div>
 
