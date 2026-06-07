@@ -6,7 +6,7 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 export async function POST(req: NextRequest) {
   try {
-    const { user_id, passage_id, answers, time_taken_seconds } = await req.json();
+    const { user_id, passage_id, answers, time_taken_seconds, question_times } = await req.json();
 
     if (!user_id || !passage_id || !answers) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
       p_answers: answers,
       p_score: score,
       p_total_questions: total,
-      p_time_taken: time_taken_seconds
+      p_time_taken: time_taken_seconds,
+      p_question_times: question_times || {}
     });
 
     if (error) throw error;

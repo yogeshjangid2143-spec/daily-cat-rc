@@ -66,8 +66,24 @@ export default function RCPage({ params }: { params: { id: string } }) {
     });
   };
 
+  const [questionTimes, setQuestionTimes] = useState<Record<string, number>>({});
+  
+  const currentIndexRef = React.useRef(currentQuestionIndex);
+  React.useEffect(() => { currentIndexRef.current = currentQuestionIndex; }, [currentQuestionIndex]);
+
+  const questionsRef = React.useRef(questions);
+  React.useEffect(() => { questionsRef.current = questions; }, [questions]);
+
   const handleTimerTick = React.useCallback((secs: number) => {
     setTimeTaken(secs);
+    setQuestionTimes(prev => {
+      const currentQ = questionsRef.current[currentIndexRef.current];
+      if (!currentQ) return prev;
+      return {
+        ...prev,
+        [currentQ.id]: (prev[currentQ.id] || 0) + 1
+      };
+    });
   }, []);
 
   const canSubmit = timeTaken >= 120; // 2 minutes minimum
@@ -84,7 +100,7 @@ export default function RCPage({ params }: { params: { id: string } }) {
 
     try {
       // API trigger or fallback to mock DB write
-      await mockDb.submitAttempt(user.id, passage.id, answers, timeTaken);
+      await mockDb.submitAttempt(user.id, passage.id, answers, timeTaken, questionTimes);
       router.push(`/rc/${params.id}/results`);
     } catch (err) {
       console.error("Submission failed", err);

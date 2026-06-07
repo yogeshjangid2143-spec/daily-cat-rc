@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS attempts (
   score INT NOT NULL,
   total_questions INT NOT NULL,
   time_taken_seconds INT,
+  question_times JSONB DEFAULT '{}'::jsonb,
   completed_at TIMESTAMPTZ DEFAULT now(),
   UNIQUE(user_id, passage_id) -- prevent re-attempts
 );
@@ -137,7 +138,8 @@ CREATE OR REPLACE FUNCTION submit_attempt_and_update_streak(
   p_answers JSONB,
   p_score INT,
   p_total_questions INT,
-  p_time_taken INT
+  p_time_taken INT,
+  p_question_times JSONB
 ) RETURNS JSONB AS $$
 DECLARE
   v_last_active DATE;
@@ -149,8 +151,8 @@ DECLARE
   v_preferred_difficulty INT;
 BEGIN
   -- Insert the attempt
-  INSERT INTO attempts (user_id, passage_id, answers, score, total_questions, time_taken_seconds)
-  VALUES (p_user_id, p_passage_id, p_answers, p_score, p_total_questions, p_time_taken);
+  INSERT INTO attempts (user_id, passage_id, answers, score, total_questions, time_taken_seconds, question_times)
+  VALUES (p_user_id, p_passage_id, p_answers, p_score, p_total_questions, p_time_taken, p_question_times);
 
   -- Get current profile details
   SELECT last_active_date, streak_count, streak_freezes_left, is_pro, preferred_difficulty

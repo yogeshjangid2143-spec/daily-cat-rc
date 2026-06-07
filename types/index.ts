@@ -49,6 +49,7 @@ export interface Attempt {
   score: number;
   total_questions: number;
   time_taken_seconds: number;
+  question_times?: Record<string, number>;
   completed_at: string;
 }
 

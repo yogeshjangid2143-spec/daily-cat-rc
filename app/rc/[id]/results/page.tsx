@@ -155,14 +155,16 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               </span>
             </div>
 
-            {/* Avg Time Per Question */}
+            {/* Time on Current Question */}
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
                 <Clock className="w-3.5 h-3.5" />
-                Avg Time / Question
+                Time on Q{currentQuestionIndex + 1}
               </span>
               <span className="font-mono text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-                {formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
+                {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id]
+                  ? formatTime(attempt.question_times[questions[currentQuestionIndex].id])
+                  : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
               </span>
             </div>
 

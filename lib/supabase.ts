@@ -292,7 +292,8 @@ export const mockDb = {
     userId: string,
     passageId: string,
     answers: Record<string, string>,
-    timeTaken: number
+    timeTaken: number,
+    questionTimes: Record<string, number> = {}
   ): Promise<{ score: number; total: number; streak_count: number; streak_freezes_left: number; preferred_difficulty: number }> => {
     if (isSupabaseConfigured && supabase) {
       try {
@@ -303,7 +304,8 @@ export const mockDb = {
             user_id: userId,
             passage_id: passageId,
             answers,
-            time_taken_seconds: timeTaken
+            time_taken_seconds: timeTaken,
+            question_times: questionTimes
           })
         });
         
@@ -338,6 +340,7 @@ export const mockDb = {
       score,
       total_questions: total,
       time_taken_seconds: timeTaken,
+      question_times: questionTimes,
       completed_at: new Date().toISOString(),
     };
 
