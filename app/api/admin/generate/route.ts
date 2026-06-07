@@ -11,7 +11,7 @@ const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || 'dailycat2026';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { passcode, customTopic } = body;
+    const { passcode, customTopic, difficulty } = body;
 
     const authHeader = req.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
@@ -52,13 +52,16 @@ export async function POST(req: Request) {
       ? `The topic must be specifically about: ${customTopic}. IMPORTANT: You must map this to one of the following exact topic categories: 'economics', 'science', 'literature', 'social', or 'abstract'.` 
       : `Choose a random high-level CAT exam topic. IMPORTANT: You must select one of the following exact topic categories: 'economics', 'science', 'literature', 'social', or 'abstract'.`;
 
+    const diffLevel = difficulty ? difficulty : 2;
+    const diffText = diffLevel === 1 ? "moderate (1)" : diffLevel === 2 ? "hard (2)" : "very hard (3)";
+
     const prompt = `
       You are an expert CAT (Common Admission Test) exam creator.
       Your task is to generate a challenging Reading Comprehension passage and exactly 5 corresponding questions.
       ${topicPrompt}
       
       Requirements:
-      - Difficulty should be moderate to hard (2 or 3), matching typical MBA entrance exams.
+      - Difficulty should be ${diffText}, matching typical MBA entrance exams.
       - The passage should be highly academic, dense, and between 350 and 450 words.
       - The 5 questions must test different skills. Use these exact types: 'main_idea', 'inference', 'factual', 'tone', 'vocabulary'.
       - Ensure the correct option is randomly distributed among A, B, C, D.

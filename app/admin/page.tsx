@@ -112,7 +112,7 @@ export default function AdminPortal() {
           'Content-Type': 'application/json',
           ...(sessionToken ? { 'Authorization': `Bearer ${sessionToken}` } : {})
         },
-        body: JSON.stringify({ passcode: 'dailycat2026', customTopic: passage.topic })
+        body: JSON.stringify({ passcode: 'dailycat2026', customTopic: passage.topic, difficulty: passage.difficulty })
       });
       const data = await res.json();
 
