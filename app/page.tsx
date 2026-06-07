@@ -11,11 +11,33 @@ export default function LandingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const { currentUser } = getMockStorage();
-    if (currentUser) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+    const checkAuth = async () => {
+      // 1. Check local mock storage first for immediate feedback
+      const { currentUser } = getMockStorage();
+      if (currentUser) {
+        setIsLoggedIn(true);
+        router.push('/dashboard');
+        return;
+      }
+      
+      // 2. Check real Supabase session
+      try {
+        const { isSupabaseConfigured, supabase } = await import('../lib/supabase');
+        if (isSupabaseConfigured && supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            setIsLoggedIn(true);
+            router.push('/dashboard');
+            return;
+          }
+        }
+      } catch(e) {
+        console.error(e);
+      }
+    };
+    
+    checkAuth();
+  }, [router]);
 
   const features = [
     {
