@@ -148,7 +148,7 @@ export default function ResultsPage() {
                <span className="uppercase tracking-wider">Question Analysis</span>
                <button 
                  onClick={() => setShowPassage(!showPassage)}
-                 className="hidden lg:flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
+                 className="flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
                >
                  {showPassage ? <><EyeOff className="w-3.5 h-3.5" /> Hide Passage</> : <><Eye className="w-3.5 h-3.5" /> Show Passage</>}
                </button>
