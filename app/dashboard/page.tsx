@@ -222,7 +222,13 @@ export default function Dashboard() {
     return 'Good evening';
   };
 
-  const attemptDatesList = attempts.map(a => a.completed_at.split('T')[0]);
+  const attemptDatesList = attempts.map(a => {
+    const d = new Date(a.completed_at);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
 
   return (
     <div className="flex-1 max-w-6xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">

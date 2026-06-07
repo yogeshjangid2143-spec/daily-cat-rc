@@ -23,7 +23,10 @@ export default function StreakWidget({
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
       const dayName = weekdays[d.getDay()];
       const isToday = i === 0;
       
@@ -41,7 +44,11 @@ export default function StreakWidget({
   };
 
   const last7Days = getLast7Days();
-  const todayStr = new Date().toISOString().split('T')[0];
+  const dToday = new Date();
+  const yearToday = dToday.getFullYear();
+  const monthToday = String(dToday.getMonth() + 1).padStart(2, '0');
+  const dayToday = String(dToday.getDate()).padStart(2, '0');
+  const todayStr = `${yearToday}-${monthToday}-${dayToday}`;
   const attemptedToday = attemptsDates.includes(todayStr);
 
   return (
