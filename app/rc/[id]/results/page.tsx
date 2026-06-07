@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Trophy, Clock, Users, ArrowRight, Share2, Sparkles, ArrowLeft, Download, CheckCircle2 } from 'lucide-react';
+import { Trophy, Clock, Users, ArrowRight, Share2, Sparkles, ArrowLeft, Download, Eye, EyeOff } from 'lucide-react';
 import { getMockStorage, mockDb } from '@/lib/supabase';
 import { Passage, Question, Attempt } from '@/types';
 import ScoreRing from '@/components/ScoreRing';
@@ -23,6 +23,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   const [downloading, setDownloading] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showPassage, setShowPassage] = useState(true);
 
   const shareCardRef = useRef<HTMLDivElement>(null);
 
@@ -109,12 +110,14 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-7xl w-full mx-auto px-4 md:px-6 py-6 gap-6 items-stretch">
         
         {/* Left Column: Passage Panel */}
-        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
-          <PassagePanel passage={passage} />
-        </div>
+        {showPassage && (
+          <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
+            <PassagePanel passage={passage} />
+          </div>
+        )}
 
         {/* Right Column: Questions & Score Panel */}
-        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-8rem)] lg:pl-2 animate-slide-in-right">
+        <div className={`${showPassage ? 'lg:col-span-6 lg:pl-2' : 'lg:col-span-8 lg:col-start-3'} flex flex-col h-full lg:max-h-[calc(100vh-8rem)] animate-slide-in-right transition-all duration-300`}>
           
           {/* Condensed Score Card / Performance Header */}
           <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-4 bg-white dark:bg-[#121211] mb-5 shrink-0 flex items-center justify-between">
@@ -141,7 +144,15 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0">
-             <span className="uppercase tracking-wider">Question Analysis</span>
+             <div className="flex items-center gap-3">
+               <span className="uppercase tracking-wider">Question Analysis</span>
+               <button 
+                 onClick={() => setShowPassage(!showPassage)}
+                 className="hidden lg:flex items-center gap-1.5 text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#818cf8] transition-colors bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 px-2 py-0.5 rounded"
+               >
+                 {showPassage ? <><EyeOff className="w-3.5 h-3.5" /> Hide Passage</> : <><Eye className="w-3.5 h-3.5" /> Show Passage</>}
+               </button>
+             </div>
              <span className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5 bg-gray-100 dark:bg-black/20 px-2.5 py-1 rounded">
                <Clock className="w-3.5 h-3.5 text-gray-400" />
                Time on Q{currentQuestionIndex + 1}: {attempt.question_times && questions.length > 0 && attempt.question_times[questions[currentQuestionIndex].id] ? formatTime(attempt.question_times[questions[currentQuestionIndex].id]) : formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
