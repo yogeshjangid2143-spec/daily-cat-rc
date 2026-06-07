@@ -97,6 +97,7 @@ export default function TopNav() {
   const isActive = (path: string) => pathname === path;
 
   return (
+    <>
     <nav className="sticky top-0 z-40 w-full border-b border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9]/80 dark:bg-[#18181B]/80 backdrop-blur-md transition-colors duration-150">
       <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         
@@ -105,12 +106,6 @@ export default function TopNav() {
           <span className="font-serif text-2xl font-bold tracking-tight text-[#1A1A18] dark:text-[#FAFAF9]">
             dailycat<span className="text-[#4F46E5] dark:text-[#6366F1]">rc</span>
           </span>
-          {user?.is_pro && (
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#4F46E5] dark:text-[#6366F1] border border-[#4F46E5]/25 dark:border-[#6366F1]/25 px-1.5 py-0.5 rounded bg-[#4F46E5]/5 dark:bg-[#6366F1]/5 uppercase flex items-center gap-0.5">
-              <Sparkles className="w-2.5 h-2.5" />
-              Pro
-            </span>
-          )}
         </Link>
 
         {/* Middle Navigation Links (Visible when logged in) */}
@@ -268,7 +263,8 @@ export default function TopNav() {
 
         </div>
       </div>
-      <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
     </nav>
+    <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
+    </>
   );
 }

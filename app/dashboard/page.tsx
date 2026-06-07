@@ -273,24 +273,6 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Upgrade Card if not Pro */}
-        {!user.is_pro && (
-          <Link
-            href="/profile"
-            className="flex items-center gap-2 border border-[#4F46E5]/20 bg-[#4F46E5]/5 dark:border-[#6366F1]/20 dark:bg-[#6366F1]/5 px-4 py-2 rounded-md hover:bg-[#4F46E5]/10 dark:hover:bg-[#6366F1]/10 transition-colors group cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 text-[#4F46E5] dark:text-[#6366F1]" />
-            <div className="text-left">
-              <p className="text-[11px] font-mono font-bold text-[#4F46E5] dark:text-[#6366F1] uppercase tracking-wider">
-                Upgrade to Pro
-              </p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400">
-                Unlock 500+ past RCs & benchmarks
-              </p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-[#4F46E5] dark:text-[#6366F1] ml-2 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        )}
       </div>
 
       {/* Main Grid Layout */}

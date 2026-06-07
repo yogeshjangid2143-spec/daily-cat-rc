@@ -163,7 +163,7 @@ export default function SignupPage() {
           avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
           streak_count: 5,
           last_active_date: new Date(Date.now() - 24 * 3600 * 1000).toISOString().split('T')[0],
-          is_pro: true,
+          is_pro: false,
           preferred_difficulty: 2,
           streak_freezes_left: 1,
           created_at: new Date().toISOString(),

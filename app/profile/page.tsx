@@ -215,16 +215,6 @@ export default function ProfilePage() {
                 </>
               )}
 
-              {user.is_pro ? (
-                <span className="text-[9px] font-mono font-bold text-[#4F46E5] dark:text-[#6366F1] border border-[#4F46E5]/35 dark:border-[#6366F1]/35 px-1.5 py-0.5 rounded bg-[#4F46E5]/5 dark:bg-[#6366F1]/5 uppercase tracking-widest flex items-center gap-0.5">
-                  <Sparkles className="w-2.5 h-2.5" />
-                  PRO MEMBER
-                </span>
-              ) : (
-                <span className="text-[9px] font-mono font-semibold text-gray-400 border border-gray-200 dark:border-[#27272A] px-1.5 py-0.5 rounded uppercase tracking-wider">
-                  FREE TIER
-                </span>
-              )}
             </div>
 
             <div className="flex flex-col gap-1.5 text-xs text-gray-500 dark:text-gray-400 font-mono">

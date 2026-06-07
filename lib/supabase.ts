@@ -153,7 +153,7 @@ export const getMockStorage = () => {
         avatar_url: u.avatar_url,
         streak_count: u.streak_count,
         last_active_date: new Date().toISOString().split('T')[0],
-        is_pro: u.id === 'u1' || u.id === 'u2',
+        is_pro: false,
         preferred_difficulty: 2,
         streak_freezes_left: 1,
         created_at: new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString(),
