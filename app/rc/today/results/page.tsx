@@ -21,6 +21,7 @@ export default function ResultsPage() {
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const shareCardRef = useRef<HTMLDivElement>(null);
 
@@ -154,6 +155,17 @@ export default function ResultsPage() {
               </span>
             </div>
 
+            {/* Avg Time Per Question */}
+            <div className="flex flex-col gap-1">
+              <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
+                <Clock className="w-3.5 h-3.5" />
+                Avg Time / Question
+              </span>
+              <span className="font-mono text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+                {formatTime(Math.round(attempt.time_taken_seconds / attempt.total_questions))}
+              </span>
+            </div>
+
             {/* Percentile benchmark */}
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
@@ -166,7 +178,7 @@ export default function ResultsPage() {
             </div>
 
             {/* Status note */}
-            <div className="col-span-2 sm:col-span-1 flex flex-col gap-1">
+            <div className="col-span-2 sm:col-span-2 flex flex-col gap-1">
               <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
                 <Trophy className="w-3.5 h-3.5" />
                 Percentile
@@ -208,19 +220,68 @@ export default function ResultsPage() {
         </p>
       </div>
 
-      {/* Explanations List */}
-      <div className="flex flex-col gap-6">
-        {questions.map((q, idx) => (
+      {/* Explanations Single View */}
+      <div className="flex flex-col gap-4">
+        {questions.length > 0 && (
           <QuestionCard
-            key={q.id}
-            question={q}
-            questionIndex={idx}
-            selectedAnswer={attempt.answers[q.id]}
+            key={questions[currentQuestionIndex].id}
+            question={questions[currentQuestionIndex]}
+            questionIndex={currentQuestionIndex}
+            selectedAnswer={attempt.answers[questions[currentQuestionIndex].id]}
             isCompleted={true}
-            correctAnswer={q.correct_option}
-            explanation={q.explanation}
+            correctAnswer={questions[currentQuestionIndex].correct_option}
+            explanation={questions[currentQuestionIndex].explanation}
           />
-        ))}
+        )}
+
+        {/* Navigation Block */}
+        <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 pb-2 flex items-center justify-between shrink-0">
+          
+          {/* Pagination Controls */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            <button
+              onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
+              disabled={currentQuestionIndex === 0}
+              className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+            >
+              ←
+            </button>
+            
+            <div className="flex gap-1 overflow-x-auto">
+              {questions.map((q, idx) => {
+                const isSelected = attempt.answers[q.id];
+                const isCorrect = isSelected === q.correct_option;
+                
+                let buttonStyle = 'border border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20';
+                if (idx === currentQuestionIndex) {
+                  buttonStyle = 'bg-[#1A1A18] text-white dark:bg-[#FAFAF9] dark:text-black';
+                } else if (isCorrect) {
+                  buttonStyle = 'border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/20';
+                } else if (isSelected && !isCorrect) {
+                  buttonStyle = 'border-rose-500 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/20';
+                }
+
+                return (
+                  <button
+                    key={q.id}
+                    onClick={() => setCurrentQuestionIndex(idx)}
+                    className={`min-w-[1.75rem] h-7 rounded flex items-center justify-center text-xs font-mono font-semibold transition-colors ${buttonStyle}`}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
+              disabled={currentQuestionIndex === questions.length - 1}
+              className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Share Image Generator Modal */}
