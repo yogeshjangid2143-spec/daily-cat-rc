@@ -44,9 +44,11 @@ export default function QuestionCard({
           {questionIndex + 1}
         </span>
         <div className="flex flex-col gap-1">
-          <span className="text-xs font-mono tracking-wider text-[#4F46E5] dark:text-[#6366F1] uppercase">
-            {question.question_type.replace('_', ' ')} Question
-          </span>
+          {isCompleted && (
+            <span className="text-xs font-mono tracking-wider text-[#4F46E5] dark:text-[#6366F1] uppercase">
+              {question.question_type.replace('_', ' ')} Question
+            </span>
+          )}
           <h3 className="font-sans text-[15px] font-semibold text-[#1A1A18] dark:text-[#FAFAF9] leading-snug">
             {question.question_text}
           </h3>

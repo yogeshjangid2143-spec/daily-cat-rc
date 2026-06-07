@@ -66,9 +66,9 @@ export default function RCPage() {
     });
   };
 
-  const handleTimerTick = (secs: number) => {
+  const handleTimerTick = React.useCallback((secs: number) => {
     setTimeTaken(secs);
-  };
+  }, []);
 
   const canSubmit = timeTaken >= 120; // 2 minutes minimum
 
