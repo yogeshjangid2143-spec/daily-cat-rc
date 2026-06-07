@@ -15,6 +15,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let authListener: any = null;
+
     const checkAuth = async () => {
       if (isSupabaseConfigured && supabase) {
         const { data: { session } } = await supabase.auth.getSession();
@@ -22,6 +24,14 @@ export default function LoginPage() {
           router.push('/dashboard');
           return;
         }
+
+        // Listen for cross-tab login events (e.g., clicking verification link in email)
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_IN' && session) {
+            router.push('/dashboard');
+          }
+        });
+        authListener = data.subscription;
       }
       const { currentUser } = getMockStorage();
       if (currentUser) {
@@ -29,6 +39,10 @@ export default function LoginPage() {
       }
     };
     checkAuth();
+
+    return () => {
+      if (authListener) authListener.unsubscribe();
+    };
   }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
