@@ -111,9 +111,7 @@ export default function Dashboard() {
         const userRankIndex = leaderboard.findIndex(e => e.id === activeUser.id);
         const currentRank = userRankIndex !== -1 ? `#${userRankIndex + 1}` : 'Top 50';
 
-        // Calculate question level analytics (weakest area)
-        // Questions types mapping (hardcoded for the seed questions logic)
-        // Question q1: main_idea, q2: inference, q3: factual, q4: tone, q5: inference
+        // Questions types mapping (fallback for mock)
         const typesMap: Record<string, string> = {
           'q1': 'main_idea',
           'q2': 'inference',
@@ -121,6 +119,31 @@ export default function Dashboard() {
           'q4': 'tone',
           'q5': 'inference',
         };
+        const correctMap: Record<string, string> = {
+          'q1': 'B',
+          'q2': 'B',
+          'q3': 'A',
+          'q4': 'C',
+          'q5': 'B',
+        };
+
+        // If using real database, fetch the actual question details
+        if (isSupabaseConfigured && supabase) {
+          const passageIds = Array.from(new Set(userAttempts.map(a => a.passage_id)));
+          if (passageIds.length > 0) {
+            const { data: questionsData } = await supabase
+              .from('questions')
+              .select('id, question_type, correct_option')
+              .in('passage_id', passageIds);
+              
+            if (questionsData) {
+              questionsData.forEach(q => {
+                typesMap[q.id] = q.question_type || 'inference';
+                correctMap[q.id] = q.correct_option;
+              });
+            }
+          }
+        }
 
         const breakdown: Record<string, { correct: number; total: number }> = {
           'main_idea': { correct: 0, total: 0 },
@@ -134,7 +157,12 @@ export default function Dashboard() {
         userAttempts.forEach(att => {
           Object.entries(att.answers).forEach(([qId, ans]) => {
             const qType = typesMap[qId] || 'inference';
-            const isCorrect = ans === (qId === 'q1' ? 'B' : qId === 'q2' ? 'B' : qId === 'q3' ? 'A' : qId === 'q4' ? 'C' : 'B');
+            const isCorrect = ans === (correctMap[qId] || 'B');
+            
+            if (!breakdown[qType]) {
+              breakdown[qType] = { correct: 0, total: 0 };
+            }
+            
             breakdown[qType].total += 1;
             if (isCorrect) breakdown[qType].correct += 1;
           });
