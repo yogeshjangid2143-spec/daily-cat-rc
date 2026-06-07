@@ -15,7 +15,7 @@ import {
   Edit, 
   Check 
 } from 'lucide-react';
-import { getMockStorage, setMockStorage, isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { getMockStorage, setMockStorage, isSupabaseConfigured, supabase, mockDb } from '@/lib/supabase';
 import { Profile, Attempt } from '@/types';
 import { formatTime } from '@/lib/utils';
 
@@ -28,6 +28,7 @@ export default function ProfilePage() {
   const [nameInput, setNameInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [updatingPro, setUpdatingPro] = useState(false);
+  const [passageMap, setPassageMap] = useState<Record<string, { title: string; topic: string }>>({});
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,6 +93,21 @@ export default function ProfilePage() {
       // Sort attempts
       userAttempts.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime());
       setAttempts(userAttempts);
+
+      // Fetch passage details
+      const passageIds = Array.from(new Set(userAttempts.map(a => a.passage_id)));
+      if (passageIds.length > 0) {
+        const pMap: Record<string, { title: string; topic: string }> = {};
+        const promises = passageIds.map(pid => mockDb.getPassageById(pid).catch(() => null));
+        const results = await Promise.all(promises);
+        results.forEach(res => {
+          if (res && res.passage) {
+            pMap[res.passage.id] = { title: res.passage.title, topic: res.passage.topic };
+          }
+        });
+        setPassageMap(pMap);
+      }
+
       setLoading(false);
     };
 
@@ -358,13 +374,15 @@ export default function ProfilePage() {
                       <div className="flex items-center gap-2">
                         {isTodayStr ? (
                           <Link href="/rc/today/results" className="hover:underline hover:text-[#4F46E5] dark:hover:text-[#6366F1]">
-                            India's GDP Trajectory and Structural Challenges
+                            {passageMap[att.passage_id]?.title || "Today's RC Passage"}
                           </Link>
                         ) : (
-                          <span>CAT Verbal Passage #{att.id.split('_').pop() || '1'}</span>
+                          <Link href={`/rc/${att.passage_id}/results`} className="hover:underline hover:text-[#4F46E5] dark:hover:text-[#6366F1]">
+                            {passageMap[att.passage_id]?.title || `CAT Verbal Passage #${att.id.split('_').pop() || '1'}`}
+                          </Link>
                         )}
                         <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-gray-100 dark:bg-[#2E2E2C] text-gray-500">
-                          {isTodayStr ? 'economics' : 'literature'}
+                          {passageMap[att.passage_id]?.topic || (isTodayStr ? 'economics' : 'literature')}
                         </span>
                       </div>
                     </td>
