@@ -49,8 +49,8 @@ export async function POST(req: Request) {
     });
 
     const topicPrompt = customTopic 
-      ? `The topic must be specifically about: ${customTopic}. IMPORTANT: You must map this to one of the following exact topic categories: 'economics', 'science', 'literature', 'social', or 'abstract'.` 
-      : `Choose a random high-level CAT exam topic. IMPORTANT: You must select one of the following exact topic categories: 'economics', 'science', 'literature', 'social', or 'abstract'.`;
+      ? `The topic must be specifically about: ${customTopic}. Ensure the passage deeply explores this subject.` 
+      : `Choose a random high-level CAT exam topic (e.g., Economics, Science, Literature, Philosophy, History).`;
 
     const diffLevel = difficulty ? difficulty : 2;
     const diffText = diffLevel === 1 ? "moderate (1)" : diffLevel === 2 ? "hard (2)" : "very hard (3)";
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
           "title": "A compelling, academic title",
           "content": "The full passage text (use paragraphs separated by double newlines)...",
           "difficulty": 2,
-          "topic": "economics",
+          "topic": "${customTopic || "economics"}",
           "word_count": 400
         },
         "questions": [

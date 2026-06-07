@@ -13,6 +13,7 @@ export default function AdminPortal() {
   const [generatingAI, setGeneratingAI] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
+  const [isCustomTopic, setIsCustomTopic] = useState(false);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -214,13 +215,40 @@ export default function AdminPortal() {
                 
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   Topic
-                  <select value={passage.topic} onChange={e => setPassage({...passage, topic: e.target.value})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs">
+                  <select 
+                    value={isCustomTopic ? 'custom' : passage.topic} 
+                    onChange={e => {
+                      if (e.target.value === 'custom') {
+                        setIsCustomTopic(true);
+                        setPassage({...passage, topic: ''});
+                      } else {
+                        setIsCustomTopic(false);
+                        setPassage({...passage, topic: e.target.value});
+                      }
+                    }} 
+                    className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs"
+                  >
                     <option value="economics">Economics</option>
                     <option value="science">Science & Tech</option>
                     <option value="literature">Literature / Arts</option>
                     <option value="social">Sociology</option>
                     <option value="abstract">Philosophy / Abstract</option>
+                    <option value="history">History</option>
+                    <option value="psychology">Psychology</option>
+                    <option value="politics">Politics & Governance</option>
+                    <option value="business">Business & Management</option>
+                    <option value="environment">Environment & Ecology</option>
+                    <option value="custom">Custom...</option>
                   </select>
+                  {isCustomTopic && (
+                    <input 
+                      type="text" 
+                      placeholder="Type custom topic (e.g. AI Ethics)" 
+                      value={passage.topic} 
+                      onChange={e => setPassage({...passage, topic: e.target.value})} 
+                      className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500" 
+                    />
+                  )}
                 </label>
 
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
