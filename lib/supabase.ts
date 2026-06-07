@@ -218,7 +218,7 @@ export const mockDb = {
   getTodayPassage: async (): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
       try {
-        const res = await fetch('/api/passage/today');
+        const res = await fetch('/api/passage/today', { cache: 'no-store' });
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.error || 'Failed to fetch today passage');
@@ -239,11 +239,11 @@ export const mockDb = {
   getTodayPassageWithAnswers: async (): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
       try {
-        const res = await fetch('/api/passage/today');
+        const res = await fetch('/api/passage/today', { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to fetch today passage');
         const data = await res.json();
         // Now fetch it explicitly with answers
-        const ansRes = await fetch(`/api/passage/${data.passage.id}?answers=true`);
+        const ansRes = await fetch(`/api/passage/${data.passage.id}?answers=true`, { cache: 'no-store' });
         if (!ansRes.ok) throw new Error('Failed to fetch answers');
         return await ansRes.json();
       } catch (e) {
@@ -496,7 +496,7 @@ export const mockDb = {
   getPassageById: async (idStr: string, withAnswers = false): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
       try {
-        const res = await fetch(`/api/passage/${idStr}${withAnswers ? '?answers=true' : ''}`);
+        const res = await fetch(`/api/passage/${idStr}${withAnswers ? '?answers=true' : ''}`, { cache: 'no-store' });
         if (!res.ok) {
           const err = await res.json();
           throw new Error(err.error || 'Failed to fetch passage by ID');
