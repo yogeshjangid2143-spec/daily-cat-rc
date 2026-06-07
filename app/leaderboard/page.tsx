@@ -44,20 +44,8 @@ export default function LeaderboardPage() {
     const loadLeaderboard = async () => {
       setLoading(true);
       try {
-        const data = await mockDb.getLeaderboard();
-
-        if (activeTab === 'alltime') {
-          // Simulate all-time leaderboard by sorting based on streak and adding offset points
-          const alltimeData = data.map((e) => ({
-            ...e,
-            weekly_score: e.weekly_score + (e.streak_count * 5) + 30, // larger scores
-            avg_accuracy: Math.min(98, e.avg_accuracy + 2),
-          })).sort((a, b) => b.weekly_score - a.weekly_score);
-          setEntries(alltimeData);
-        } else {
-          // Weekly data
-          setEntries(data);
-        }
+        const data = await mockDb.getLeaderboard(activeTab);
+        setEntries(data);
       } catch (err) {
         console.error("Failed to load leaderboard data", err);
       } finally {

@@ -232,6 +232,7 @@ export const mockDb = {
 
     return {
       passage: SAMPLE_PASSAGE,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       questions: SAMPLE_QUESTIONS.map(({ correct_option, explanation, ...q }) => q as Question),
     };
   },
@@ -346,7 +347,7 @@ export const mockDb = {
 
     // Prevent duplicate attempts
     const alreadyAttempted = attempts.some(a => a.user_id === userId && a.passage_id === passageId);
-    let updatedAttempts = [...attempts];
+    const updatedAttempts = [...attempts];
     if (!alreadyAttempted) {
       updatedAttempts.push(newAttempt);
     }
@@ -425,23 +426,32 @@ export const mockDb = {
     };
   },
 
-  getLeaderboard: async (): Promise<LeaderboardEntry[]> => {
+  getLeaderboard: async (period: 'weekly' | 'alltime' = 'weekly'): Promise<LeaderboardEntry[]> => {
     if (isSupabaseConfigured && supabase) {
+      const viewName = period === 'alltime' ? 'alltime_leaderboard' : 'weekly_leaderboard';
       const { data, error } = await supabase
-        .from('weekly_leaderboard')
+        .from(viewName)
         .select('*')
         .limit(50);
-      if (error) throw error;
+      if (error) {
+        // Fallback to weekly if alltime view doesn't exist yet in user's DB
+        if (period === 'alltime') {
+           const { data: fallbackData } = await supabase.from('weekly_leaderboard').select('*').limit(50);
+           return fallbackData as LeaderboardEntry[] || [];
+        }
+        throw error;
+      }
       return data as LeaderboardEntry[];
     }
 
     const { profiles, attempts } = getMockStorage();
     
-    // Calculate weekly leaderboard
-    const weeklyEntries: LeaderboardEntry[] = profiles.map(p => {
+    // Calculate real leaderboard
+    const entries: LeaderboardEntry[] = profiles.map(p => {
       const userAttempts = attempts.filter(a => a.user_id === p.id);
       
-      const weeklyAttempts = userAttempts.filter(a => {
+      const filteredAttempts = userAttempts.filter(a => {
+        if (period === 'alltime') return true;
         const date = new Date(a.completed_at);
         const startOfWeek = new Date();
         startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Sunday
@@ -449,10 +459,10 @@ export const mockDb = {
         return date >= startOfWeek;
       });
 
-      const weeklyScore = weeklyAttempts.reduce((sum, a) => sum + a.score, 0);
-      const totalQuestions = weeklyAttempts.reduce((sum, a) => sum + a.total_questions, 0);
+      const totalScore = filteredAttempts.reduce((sum, a) => sum + a.score, 0);
+      const totalQuestions = filteredAttempts.reduce((sum, a) => sum + a.total_questions, 0);
       const avgAccuracy = totalQuestions > 0 
-        ? Math.round((weeklyScore / totalQuestions) * 1000) / 10 
+        ? Math.round((totalScore / totalQuestions) * 1000) / 10 
         : 0;
 
       return {
@@ -460,13 +470,13 @@ export const mockDb = {
         name: p.name || 'Anonymous User',
         avatar_url: p.avatar_url,
         streak_count: p.streak_count,
-        weekly_score: weeklyScore,
-        attempts_this_week: weeklyAttempts.length,
+        weekly_score: totalScore,
+        attempts_this_week: filteredAttempts.length,
         avg_accuracy: avgAccuracy,
       };
     });
 
-    return weeklyEntries.sort((a, b) => b.weekly_score - a.weekly_score);
+    return entries.sort((a, b) => b.weekly_score - a.weekly_score);
   },
 
   getTodayPercentile: async (score: number): Promise<number> => {
@@ -541,7 +551,7 @@ export const mockDb = {
       { ...SAMPLE_PASSAGE, id: 'past-1', published_date: d1.toISOString().split('T')[0], title: 'Crises of Aging and Economic Productivity', topic: 'economics' },
       { ...SAMPLE_PASSAGE, id: 'past-2', published_date: d2.toISOString().split('T')[0], title: "The AI Revolution's Corporate Conundrum", topic: 'science' },
       { ...SAMPLE_PASSAGE, id: 'past-3', published_date: d3.toISOString().split('T')[0], title: "Ascending India's Elite Business Academy", topic: 'social' },
-      { ...SAMPLE_PASSAGE, id: 'past-4', published_date: d4.toISOString().split('T')[0], title: "Ancient Greece's Coercive Empire Unveiled", topic: 'history' as any },
+      { ...SAMPLE_PASSAGE, id: 'past-4', published_date: d4.toISOString().split('T')[0], title: "Ancient Greece's Coercive Empire Unveiled", topic: 'history' },
     ];
   }
 };
