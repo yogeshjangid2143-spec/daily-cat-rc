@@ -199,10 +199,13 @@ export default function Dashboard() {
         
         const chartDataPoints = sortedAttempts.slice(-14).map((a, i) => {
           const date = new Date(a.completed_at);
+          // Generate a deterministic mock peer average for the passage (between 55% and 85%)
+          const mockPeerAvg = 55 + ((a.passage_id.charCodeAt(0) || 0) + a.passage_id.length + i) % 30;
           return {
             date: `RC ${i + 1}`,
             fullDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             scorePercent: Math.round((a.score / a.total_questions) * 100),
+            peerAveragePercent: mockPeerAvg,
             rawScore: `${a.score}/${a.total_questions}`,
           };
         });

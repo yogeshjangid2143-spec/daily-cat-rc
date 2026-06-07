@@ -16,6 +16,7 @@ interface ChartDataPoint {
   date: string;
   fullDate?: string;
   scorePercent: number;
+  peerAveragePercent?: number;
   rawScore: string;
 }
 
@@ -30,10 +31,17 @@ const CustomTooltip = ({ active, payload }: any) => {
         <p className="font-semibold text-gray-500 dark:text-gray-400 mb-1">
           {payload[0].payload.fullDate || payload[0].payload.date}
         </p>
-        <p className="text-[#1A1A18] dark:text-[#FAFAF9]">
-          Accuracy: <span className="font-bold text-[#4F46E5] dark:text-[#6366F1]">{payload[0].value}%</span>
+        <p className="text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-[#4F46E5] dark:bg-[#6366F1]" />
+          Your Accuracy: <span className="font-bold">{payload[0].payload.scorePercent}%</span>
         </p>
-        <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
+        {payload[0].payload.peerAveragePercent !== undefined && (
+          <p className="text-gray-500 dark:text-gray-400 flex items-center gap-1.5 mt-0.5">
+            <span className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500" />
+            Peer Average: <span className="font-bold">{payload[0].payload.peerAveragePercent}%</span>
+          </p>
+        )}
+        <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1">
           Score: {payload[0].payload.rawScore}
         </p>
       </div>
@@ -103,6 +111,17 @@ export default function ScoreChart({ data }: ScoreChartProps) {
             className="font-mono"
           />
           <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#4F46E5', strokeWidth: 1, strokeDasharray: '3 3', opacity: 0.3 }} />
+          <Line
+            type="monotone"
+            dataKey="peerAveragePercent"
+            stroke="#9CA3AF"
+            strokeWidth={2}
+            strokeDasharray="4 4"
+            isAnimationActive={false}
+            dot={false}
+            activeDot={{ r: 4, strokeWidth: 0, fill: '#9CA3AF' }}
+            className="dark:stroke-[#6B7280]"
+          />
           <Line
             type="monotone"
             dataKey="scorePercent"
