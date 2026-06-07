@@ -276,10 +276,10 @@ export default function Dashboard() {
       </div>
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Today's RC, Performance Chart, Analytics */}
-        <div className="lg:col-span-8 flex flex-col gap-8">
+        <div className="md:col-span-8 flex flex-col gap-8">
           
           {/* Today's RC Card */}
           <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:100ms] opacity-0">
@@ -447,7 +447,7 @@ export default function Dashboard() {
         </div>
 
         {/* Right Column: Streak Widget & Quick Stats */}
-        <div className="lg:col-span-4 flex flex-col gap-8">
+        <div className="md:col-span-4 flex flex-col gap-8">
           
           {/* Streak Widget */}
           <StreakWidget
