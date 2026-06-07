@@ -72,7 +72,7 @@ export default function QuestionCard({
               cardStyle = "border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 text-rose-900 dark:text-rose-300";
               badgeStyle = "bg-rose-500 text-white border-rose-500";
             } else {
-              cardStyle = "border-[#E5E5E3] dark:border-[#27272A] opacity-60 text-gray-400 dark:text-gray-600";
+              cardStyle = "border-[#E5E5E3] dark:border-[#27272A] text-gray-500 dark:text-gray-400";
             }
           } else if (isSelected) {
             cardStyle = "border-[#4F46E5] dark:border-[#6366F1] bg-[#4F46E5]/5 dark:bg-[#6366F1]/5 text-[#4F46E5] dark:text-[#6366F1]";
