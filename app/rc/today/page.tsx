@@ -86,7 +86,7 @@ export default function RCPage() {
     });
   }, []);
 
-  const canSubmit = timeTaken >= 120; // 2 minutes minimum
+  const canSubmit = timeTaken >= 30; // 30 seconds minimum
 
   const handleSubmitClick = () => {
     if (!canSubmit) return;
