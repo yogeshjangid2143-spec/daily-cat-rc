@@ -400,6 +400,7 @@ export default function Dashboard() {
                 );
               })}
           </div>
+          </div>
           
           {/* Locked Premium Feature Demo */}
           <div className="relative border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:400ms] opacity-0 overflow-hidden group">
@@ -528,8 +529,6 @@ export default function Dashboard() {
 
         </div>
       </div>
-      </div>
-      
       <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
     </div>
   );
