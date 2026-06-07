@@ -3,7 +3,7 @@
 import React from 'react';
 import { Question } from '../types';
 import { cn } from '../lib/utils';
-import { Check, X, HelpCircle } from 'lucide-react';
+import { Check, X, HelpCircle, Plus, Minus } from 'lucide-react';
 
 interface QuestionCardProps {
   question: Question;
@@ -24,6 +24,12 @@ export default function QuestionCard({
   correctAnswer,
   explanation,
 }: QuestionCardProps) {
+  const fontSizes = ['text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl'];
+  const [fontSizeIndex, setFontSizeIndex] = React.useState(0);
+
+  const increaseFont = () => setFontSizeIndex(prev => Math.min(prev + 1, fontSizes.length - 1));
+  const decreaseFont = () => setFontSizeIndex(prev => Math.max(prev - 1, 0));
+
   const options: { key: 'A' | 'B' | 'C' | 'D'; text: string }[] = [
     { key: 'A', text: question.option_a },
     { key: 'B', text: question.option_b },
@@ -106,11 +112,17 @@ export default function QuestionCard({
       {/* Explanation section for Completed Mode */}
       {isCompleted && explanation && (
         <div className="mt-2 p-4 border border-[#4F46E5]/15 dark:border-[#6366F1]/15 rounded bg-[#4F46E5]/5 dark:bg-[#6366F1]/5 flex flex-col gap-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#4F46E5] dark:text-[#6366F1] font-mono">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>EXPLANATION</span>
+          <div className="flex items-center justify-between gap-2 text-xs font-semibold text-[#4F46E5] dark:text-[#6366F1] font-mono">
+            <div className="flex items-center gap-2">
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>EXPLANATION</span>
+            </div>
+            <div className="flex items-center gap-1 bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 rounded px-1 py-0.5">
+              <button onClick={decreaseFont} disabled={fontSizeIndex === 0} className="p-1 hover:bg-[#4F46E5]/20 dark:hover:bg-[#6366F1]/20 rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent" title="Decrease Font Size"><Minus className="w-3 h-3" /></button>
+              <button onClick={increaseFont} disabled={fontSizeIndex === fontSizes.length - 1} className="p-1 hover:bg-[#4F46E5]/20 dark:hover:bg-[#6366F1]/20 rounded transition-colors disabled:opacity-30 disabled:hover:bg-transparent" title="Increase Font Size"><Plus className="w-3 h-3" /></button>
+            </div>
           </div>
-          <p className="font-sans text-xs leading-relaxed text-[#1A1A18] dark:text-gray-300">
+          <p className={cn("font-sans leading-relaxed text-[#1A1A18] dark:text-gray-300 transition-all", fontSizes[fontSizeIndex])}>
             {explanation}
           </p>
         </div>
