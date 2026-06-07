@@ -37,7 +37,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
     const loadResults = async () => {
       try {
-        const res = await mockDb.getPassageById(params.id);
+        const res = await mockDb.getPassageById(params.id, true);
         const userAttempt = await mockDb.getAttempt(currentUser.id, res.passage.id);
         
         if (!userAttempt) {
