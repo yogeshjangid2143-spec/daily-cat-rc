@@ -25,7 +25,7 @@ interface ScoreChartProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-white dark:bg-[#121211] border border-[#E5E5E3] dark:border-[#2E2E2C] p-3 rounded shadow-none text-xs font-mono">
+      <div className="bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] p-3 rounded shadow-none text-xs font-mono">
         <p className="font-semibold text-gray-500 dark:text-gray-400 mb-1">{payload[0].payload.date}</p>
         <p className="text-[#1A1A18] dark:text-[#FAFAF9]">
           Accuracy: <span className="font-bold text-[#4F46E5] dark:text-[#6366F1]">{payload[0].value}%</span>
@@ -48,7 +48,7 @@ export default function ScoreChart({ data }: ScoreChartProps) {
 
   if (!mounted) {
     return (
-      <div className="h-[240px] w-full flex items-center justify-center bg-gray-50 dark:bg-black/10 rounded-md border border-[#E5E5E3] dark:border-[#2E2E2C]">
+      <div className="h-[240px] w-full flex items-center justify-center bg-gray-50 dark:bg-black/10 rounded-md border border-[#E5E5E3] dark:border-[#27272A]">
         <div className="text-xs text-gray-400 dark:text-gray-500 font-mono animate-pulse">
           Loading performance chart...
         </div>
@@ -58,7 +58,7 @@ export default function ScoreChart({ data }: ScoreChartProps) {
 
   if (data.length === 0) {
     return (
-      <div className="h-[240px] w-full flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-black/10 rounded-md border border-dashed border-[#E5E5E3] dark:border-[#2E2E2C] p-4">
+      <div className="h-[240px] w-full flex flex-col items-center justify-center text-center bg-gray-50 dark:bg-black/10 rounded-md border border-dashed border-[#E5E5E3] dark:border-[#27272A] p-4">
         <p className="text-sm font-semibold text-[#1A1A18] dark:text-[#FAFAF9]">No attempts yet</p>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           Solve your first daily Reading Comprehension to see performance trends!
@@ -78,7 +78,7 @@ export default function ScoreChart({ data }: ScoreChartProps) {
             strokeDasharray="3 3"
             stroke="#E5E5E3"
             vertical={false}
-            className="dark:stroke-[#2E2E2C]"
+            className="dark:stroke-[#27272A]"
           />
           <XAxis
             dataKey="date"

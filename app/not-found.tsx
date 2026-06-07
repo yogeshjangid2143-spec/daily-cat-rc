@@ -6,7 +6,7 @@ import { ChevronLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-6 text-center relative overflow-hidden bg-[#FAFAF9] dark:bg-[#121211]">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-6 text-center relative overflow-hidden bg-[#FAFAF9] dark:bg-[#18181B]">
       
       {/* Massive Background 404 */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5 dark:opacity-10 select-none">

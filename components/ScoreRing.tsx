@@ -32,7 +32,7 @@ export default function ScoreRing({
           fill="transparent"
           stroke="#E5E5E3"
           strokeWidth={strokeWidth}
-          className="dark:stroke-[#2E2E2C]"
+          className="dark:stroke-[#27272A]"
         />
         {/* Foreground Circle */}
         <circle

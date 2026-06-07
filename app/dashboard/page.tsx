@@ -219,7 +219,7 @@ export default function Dashboard() {
   if (loading || !user) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 gap-4">
-        <div className="w-10 h-10 rounded-full border-2 border-[#E5E5E3] dark:border-[#2E2E2C] border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
+        <div className="w-10 h-10 rounded-full border-2 border-[#E5E5E3] dark:border-[#27272A] border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
         <span className="font-mono text-xs text-gray-500 animate-pulse-glow">Loading your profile stats...</span>
       </div>
     );
@@ -244,7 +244,7 @@ export default function Dashboard() {
   return (
     <div className="flex-1 max-w-6xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
       {/* Top Header Greeting */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-6 animate-fade-in-up">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5E5E3] dark:border-[#27272A] pb-6 animate-fade-in-up">
         <div>
           <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A18] dark:text-[#FAFAF9]">
             {getGreeting()}, {user.name}.
@@ -282,8 +282,8 @@ export default function Dashboard() {
         <div className="lg:col-span-8 flex flex-col gap-8">
           
           {/* Today's RC Card */}
-          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg bg-white dark:bg-[#121211] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:100ms] opacity-0">
-            <div className="flex items-start justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-4">
+          <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:100ms] opacity-0">
+            <div className="flex items-start justify-between border-b border-[#E5E5E3] dark:border-[#27272A] pb-4">
               <div>
                 <span className="text-[10px] font-mono font-bold tracking-wider text-[#4F46E5] dark:text-[#6366F1] uppercase px-2 py-0.5 bg-[#4F46E5]/10 dark:bg-[#6366F1]/10 rounded">
                   Today's Practice RC
@@ -326,7 +326,7 @@ export default function Dashboard() {
               {todayAttempt ? (
                 <Link
                   href="/rc/today/results"
-                  className="px-5 py-2.5 border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 text-xs font-mono font-semibold text-[#1A1A18] dark:text-[#FAFAF9] rounded transition-colors"
+                  className="px-5 py-2.5 border border-[#E5E5E3] dark:border-[#27272A] hover:border-gray-400 dark:hover:border-gray-600 text-xs font-mono font-semibold text-[#1A1A18] dark:text-[#FAFAF9] rounded transition-colors"
                 >
                   View Results & Detailed Explanations
                 </Link>
@@ -343,7 +343,7 @@ export default function Dashboard() {
           </div>
 
           {/* Performance Trend Chart */}
-          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg bg-white dark:bg-[#121211] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:200ms] opacity-0">
+          <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:200ms] opacity-0">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
@@ -359,7 +359,7 @@ export default function Dashboard() {
           </div>
 
           {/* Accuracy Breakdown (Question-Level Analytics) */}
-          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg bg-white dark:bg-[#121211] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:300ms] opacity-0">
+          <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-6 flex flex-col gap-6 animate-fade-in-up [animation-delay:300ms] opacity-0">
             <div>
               <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
                 Question Type Analytics
@@ -386,7 +386,7 @@ export default function Dashboard() {
               {Object.entries(typeBreakdown).map(([type, value]) => {
                 const acc = value.total > 0 ? Math.round((value.correct / value.total) * 100) : 0;
                 return (
-                  <div key={type} className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded p-3 bg-[#FAFAF9] dark:bg-[#121211]/50 text-center flex flex-col gap-1">
+                  <div key={type} className="border border-[#E5E5E3] dark:border-[#27272A] rounded p-3 bg-[#FAFAF9] dark:bg-[#18181B]/50 text-center flex flex-col gap-1">
                     <span className="font-mono text-[9px] uppercase tracking-wider text-gray-500 truncate" title={type}>
                       {type.replace('_', ' ')}
                     </span>
@@ -414,8 +414,8 @@ export default function Dashboard() {
           />
 
           {/* Quick Stats Grid */}
-          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg bg-white dark:bg-[#121211] p-5 flex flex-col gap-4 animate-fade-in-up [animation-delay:400ms] opacity-0">
-            <h3 className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-2.5">
+          <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-white dark:bg-[#18181B] p-5 flex flex-col gap-4 animate-fade-in-up [animation-delay:400ms] opacity-0">
+            <h3 className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] border-b border-[#E5E5E3] dark:border-[#27272A] pb-2.5">
               Quick Stats
             </h3>
             
@@ -455,7 +455,7 @@ export default function Dashboard() {
               </div>
 
               {/* CAT Benchmarking Preview (Suggestion #8) */}
-              <div className="mt-2 border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 text-[11px] leading-relaxed text-gray-500 dark:text-gray-400">
+              <div className="mt-2 border-t border-[#E5E5E3] dark:border-[#27272A] pt-3 text-[11px] leading-relaxed text-gray-500 dark:text-gray-400">
                 <div className="flex items-center gap-1 font-semibold text-[#4F46E5] dark:text-[#6366F1] font-mono text-[10px] uppercase mb-1">
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>CAT Percentile Benchmark</span>
@@ -477,7 +477,7 @@ export default function Dashboard() {
 
             <Link
               href="/leaderboard"
-              className="mt-2 text-xs font-mono font-semibold text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#4F46E5] flex items-center gap-0.5 justify-center border border-[#E5E5E3] dark:border-[#2E2E2C] py-2 rounded hover:bg-gray-50 dark:hover:bg-black/10 transition-colors"
+              className="mt-2 text-xs font-mono font-semibold text-[#4F46E5] hover:text-[#4338CA] dark:text-[#6366F1] dark:hover:text-[#4F46E5] flex items-center gap-0.5 justify-center border border-[#E5E5E3] dark:border-[#27272A] py-2 rounded hover:bg-gray-50 dark:hover:bg-black/10 transition-colors"
             >
               <span>View Leaderboard</span>
               <ChevronRight className="w-3.5 h-3.5" />

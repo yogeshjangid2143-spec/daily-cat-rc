@@ -185,7 +185,7 @@ export default function SignupPage() {
 
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-[400px] border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col gap-6">
+      <div className="w-full max-w-[400px] border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col gap-6">
         <div className="text-center flex flex-col gap-1.5">
           <h2 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
             Create Account
@@ -221,7 +221,7 @@ export default function SignupPage() {
                 placeholder="Rohan Sharma"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
+                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
                 required
               />
             </div>
@@ -238,7 +238,7 @@ export default function SignupPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
+                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
                 required
               />
             </div>
@@ -255,7 +255,7 @@ export default function SignupPage() {
                 placeholder="Min. 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
+                className="w-full font-sans text-sm pl-10 pr-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:border-gray-400 dark:focus:border-gray-600 focus:ring-1 focus:ring-[#4F46E5]"
                 required
               />
             </div>
@@ -271,15 +271,15 @@ export default function SignupPage() {
         </form>
 
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-[#E5E5E3] dark:border-[#2E2E2C]"></div>
+          <div className="flex-grow border-t border-[#E5E5E3] dark:border-[#27272A]"></div>
           <span className="flex-shrink mx-4 text-gray-400 text-[10px] font-mono font-semibold uppercase">Or</span>
-          <div className="flex-grow border-t border-[#E5E5E3] dark:border-[#2E2E2C]"></div>
+          <div className="flex-grow border-t border-[#E5E5E3] dark:border-[#27272A]"></div>
         </div>
 
         <button
           onClick={handleGoogleSignup}
           disabled={loading}
-          className="w-full py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] hover:bg-gray-50 dark:hover:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-semibold text-xs rounded transition-colors duration-150 flex items-center justify-center gap-2"
+          className="w-full py-2 border border-[#E5E5E3] dark:border-[#27272A] hover:bg-gray-50 dark:hover:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-semibold text-xs rounded transition-colors duration-150 flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

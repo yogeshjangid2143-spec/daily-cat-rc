@@ -76,7 +76,7 @@ export default function HistoryArchivePage() {
             return (
               <div 
                 key={passage.id}
-                className="group relative flex flex-col bg-white dark:bg-[#121211] rounded-2xl border border-[#E5E5E3] dark:border-[#2E2E2C] overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 dark:hover:border-indigo-500/30 transition-all duration-300 animate-fade-in-up"
+                className="group relative flex flex-col bg-white dark:bg-[#18181B] rounded-2xl border border-[#E5E5E3] dark:border-[#27272A] overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 dark:hover:border-indigo-500/30 transition-all duration-300 animate-fade-in-up"
                 style={{ animationDelay: `${(idx + 2) * 50}ms` }}
               >
                 {/* Decorative Top Gradient */}

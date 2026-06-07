@@ -218,9 +218,9 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
         
         {/* Left Side: Avatar, details */}
-        <div className="md:col-span-8 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+        <div className="md:col-span-8 border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col sm:flex-row gap-6 items-start sm:items-center">
           
-          <div className="w-20 h-20 rounded-full bg-[#E5E5E3] dark:bg-[#2E2E2C] flex items-center justify-center font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] border border-[#E5E5E3] dark:border-[#2E2E2C] overflow-hidden flex-shrink-0">
+          <div className="w-20 h-20 rounded-full bg-[#E5E5E3] dark:bg-[#27272A] flex items-center justify-center font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] border border-[#E5E5E3] dark:border-[#27272A] overflow-hidden flex-shrink-0">
             {user.avatar_url ? (
               <img src={user.avatar_url} alt={user.name || ''} className="w-full h-full object-cover" />
             ) : (
@@ -236,7 +236,7 @@ export default function ProfilePage() {
                     type="text"
                     value={nameInput}
                     onChange={(e) => setNameInput(e.target.value)}
-                    className="flex-1 font-sans text-sm px-2.5 py-1 border border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:ring-1 focus:ring-[#4F46E5]"
+                    className="flex-1 font-sans text-sm px-2.5 py-1 border border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9] dark:bg-black/20 text-[#1A1A18] dark:text-[#FAFAF9] rounded outline-none focus:ring-1 focus:ring-[#4F46E5]"
                   />
                   <button onClick={handleSaveName} className="p-1 border border-green-200 dark:border-green-800 text-green-600 rounded bg-green-50 dark:bg-green-950/20">
                     <Check className="w-4 h-4" />
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                   PRO MEMBER
                 </span>
               ) : (
-                <span className="text-[9px] font-mono font-semibold text-gray-400 border border-gray-200 dark:border-[#2E2E2C] px-1.5 py-0.5 rounded uppercase tracking-wider">
+                <span className="text-[9px] font-mono font-semibold text-gray-400 border border-gray-200 dark:border-[#27272A] px-1.5 py-0.5 rounded uppercase tracking-wider">
                   FREE TIER
                 </span>
               )}
@@ -279,7 +279,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Side: Pro upgrade widget */}
-        <div className="md:col-span-4 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col justify-between gap-4">
+        <div className="md:col-span-4 border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col justify-between gap-4">
           {user.is_pro ? (
             <div className="flex flex-col gap-2 text-center items-center my-auto">
               <Sparkles className="w-8 h-8 text-[#4F46E5] dark:text-[#6366F1] animate-bounce" />
@@ -313,28 +313,28 @@ export default function ProfilePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         
         {/* Streak */}
-        <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-1 items-center text-center">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-1 items-center text-center">
           <Flame className="w-5 h-5 text-amber-500 fill-amber-50" />
           <span className="font-mono text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-1">Streak</span>
           <span className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{user.streak_count} Days</span>
         </div>
 
         {/* Total RCs */}
-        <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-1 items-center text-center">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-1 items-center text-center">
           <Award className="w-5 h-5 text-[#4F46E5] dark:text-[#6366F1]" />
           <span className="font-mono text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-1">Total Solved</span>
           <span className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{totalSolved}</span>
         </div>
 
         {/* Avg Accuracy */}
-        <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-1 items-center text-center">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-1 items-center text-center">
           <TrendingUp className="w-5 h-5 text-[#4F46E5] dark:text-[#6366F1]" />
           <span className="font-mono text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-1">Avg Accuracy</span>
           <span className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{avgAccuracy}%</span>
         </div>
 
         {/* Best Score */}
-        <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-1 items-center text-center">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-1 items-center text-center">
           <CheckCircle2 className="w-5 h-5 text-[#4F46E5] dark:text-[#6366F1]" />
           <span className="font-mono text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mt-1">Best Score</span>
           <span className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{bestScore}/5</span>
@@ -344,23 +344,23 @@ export default function ProfilePage() {
 
       {/* Attempt History Section */}
       <div className="flex flex-col gap-4">
-        <div className="border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-2">
+        <div className="border-b border-[#E5E5E3] dark:border-[#27272A] pb-2">
           <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
             Attempt History
           </h3>
         </div>
 
-        <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg overflow-hidden bg-white dark:bg-[#121211]">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg overflow-hidden bg-white dark:bg-[#18181B]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 dark:bg-[#121211] border-b border-[#E5E5E3] dark:border-[#2E2E2C] text-xs font-mono font-semibold text-gray-500 uppercase">
+              <tr className="bg-gray-50 dark:bg-[#18181B] border-b border-[#E5E5E3] dark:border-[#27272A] text-xs font-mono font-semibold text-gray-500 uppercase">
                 <th className="px-5 py-3.5">Date</th>
                 <th className="px-5 py-3.5">Passage / Topic</th>
                 <th className="px-5 py-3.5 text-center w-28">Score</th>
                 <th className="px-5 py-3.5 text-center w-28">Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E5E5E3] dark:divide-[#2E2E2C] text-sm">
+            <tbody className="divide-y divide-[#E5E5E3] dark:divide-[#27272A] text-sm">
               {currentAttempts.map((att) => {
                 const date = new Date(att.completed_at);
                 const isTodayStr = date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
@@ -381,7 +381,7 @@ export default function ProfilePage() {
                             {passageMap[att.passage_id]?.title || `CAT Verbal Passage #${att.id.split('_').pop() || '1'}`}
                           </Link>
                         )}
-                        <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-gray-100 dark:bg-[#2E2E2C] text-gray-500">
+                        <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-gray-100 dark:bg-[#27272A] text-gray-500">
                           {passageMap[att.passage_id]?.topic || (isTodayStr ? 'economics' : 'literature')}
                         </span>
                       </div>
@@ -408,11 +408,11 @@ export default function ProfilePage() {
           
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] px-5 py-3 flex items-center justify-between bg-gray-50 dark:bg-[#121211] font-mono text-xs select-none">
+            <div className="border-t border-[#E5E5E3] dark:border-[#27272A] px-5 py-3 flex items-center justify-between bg-gray-50 dark:bg-[#18181B] font-mono text-xs select-none">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded hover:bg-gray-100 dark:hover:bg-black/20 disabled:opacity-40 disabled:hover:bg-transparent"
+                className="px-3 py-1 border border-[#E5E5E3] dark:border-[#27272A] rounded hover:bg-gray-100 dark:hover:bg-black/20 disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 Previous
               </button>
@@ -422,7 +422,7 @@ export default function ProfilePage() {
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded hover:bg-gray-100 dark:hover:bg-black/20 disabled:opacity-40 disabled:hover:bg-transparent"
+                className="px-3 py-1 border border-[#E5E5E3] dark:border-[#27272A] rounded hover:bg-gray-100 dark:hover:bg-black/20 disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 Next
               </button>

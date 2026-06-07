@@ -82,7 +82,7 @@ export default function LeaderboardPage() {
     <div className="flex-1 max-w-4xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
       
       {/* Header and Reset Timer */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E5E5E3] dark:border-[#27272A] pb-6">
         <div>
           <h1 className="font-serif text-4xl md:text-5xl font-bold tracking-tight text-[#1A1A18] dark:text-[#FAFAF9]">
             The Leaderboard
@@ -93,7 +93,7 @@ export default function LeaderboardPage() {
         </div>
 
         {/* Reset time label */}
-        <div className="flex items-center gap-2 border border-[#E5E5E3] dark:border-[#2E2E2C] px-3.5 py-2 rounded-md bg-white dark:bg-[#121211] font-mono text-xs select-none">
+        <div className="flex items-center gap-2 border border-[#E5E5E3] dark:border-[#27272A] px-3.5 py-2 rounded-md bg-white dark:bg-[#18181B] font-mono text-xs select-none">
           <Clock className="w-4 h-4 text-gray-400" />
           <div className="text-left">
             <p className="text-[9px] text-gray-400 uppercase font-semibold">Weekly Reset In</p>
@@ -104,7 +104,7 @@ export default function LeaderboardPage() {
 
       {/* Tabs Selector & Subtext */}
       <div className="flex items-center justify-between">
-        <div className="flex border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-md p-1 bg-white dark:bg-[#121211] select-none font-mono text-xs">
+        <div className="flex border border-[#E5E5E3] dark:border-[#27272A] rounded-md p-1 bg-white dark:bg-[#18181B] select-none font-mono text-xs">
           <button
             onClick={() => setActiveTab('weekly')}
             className={`px-4 py-1.5 rounded font-semibold transition-colors ${

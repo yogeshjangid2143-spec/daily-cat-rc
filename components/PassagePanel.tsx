@@ -26,7 +26,7 @@ export default function PassagePanel({ passage, showPassageToggle, onTogglePassa
 
   return (
     <article className="h-full flex flex-col select-none">
-      <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0 min-h-[44px]">
+      <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#27272A] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0 min-h-[44px]">
         <span className="uppercase tracking-wider">READING COMPREHENSION PASSAGE</span>
         <div className="flex items-center gap-2">
           {showPassageToggle && onTogglePassage && (
@@ -39,10 +39,10 @@ export default function PassagePanel({ passage, showPassageToggle, onTogglePassa
               <span className="hidden sm:inline">{isPassageHidden ? 'Show Passage' : 'Hide Passage'}</span>
             </button>
           )}
-          <div className="flex items-center gap-0.5 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-md bg-[#FAFAF9] dark:bg-[#121211] px-1 py-0.5 text-[#1A1A18] dark:text-[#FAFAF9]">
-            <button onClick={() => setFontSize(s => Math.max(13, s - 1))} className="w-6 h-6 flex items-center justify-center hover:bg-[#E5E5E3] dark:hover:bg-[#2E2E2C] rounded transition-colors font-serif" title="Decrease text size">A-</button>
-            <div className="w-px h-3 bg-[#E5E5E3] dark:bg-[#2E2E2C] mx-0.5"></div>
-            <button onClick={() => setFontSize(s => Math.min(26, s + 1))} className="w-6 h-6 flex items-center justify-center hover:bg-[#E5E5E3] dark:hover:bg-[#2E2E2C] rounded transition-colors text-sm font-serif" title="Increase text size">A+</button>
+          <div className="flex items-center gap-0.5 border border-[#E5E5E3] dark:border-[#27272A] rounded-md bg-[#FAFAF9] dark:bg-[#18181B] px-1 py-0.5 text-[#1A1A18] dark:text-[#FAFAF9]">
+            <button onClick={() => setFontSize(s => Math.max(13, s - 1))} className="w-6 h-6 flex items-center justify-center hover:bg-[#E5E5E3] dark:hover:bg-[#27272A] rounded transition-colors font-serif" title="Decrease text size">A-</button>
+            <div className="w-px h-3 bg-[#E5E5E3] dark:bg-[#27272A] mx-0.5"></div>
+            <button onClick={() => setFontSize(s => Math.min(26, s + 1))} className="w-6 h-6 flex items-center justify-center hover:bg-[#E5E5E3] dark:hover:bg-[#27272A] rounded transition-colors text-sm font-serif" title="Increase text size">A+</button>
           </div>
         </div>
       </div>

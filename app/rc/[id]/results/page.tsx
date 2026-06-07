@@ -111,7 +111,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         
         {/* Left Column: Passage Panel */}
         {showPassage && (
-          <div className="lg:col-span-6 pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in relative">
+          <div className="lg:col-span-6 pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#27272A] animate-fade-in relative">
             <div className="lg:sticky lg:top-6 lg:h-[calc(100vh-6rem)] flex flex-col">
               <PassagePanel 
                 passage={passage} 
@@ -127,7 +127,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         <div className={`${showPassage ? 'lg:col-span-6 lg:pl-2' : 'lg:col-span-8 lg:col-start-3'} flex flex-col animate-slide-in-right transition-all duration-300`}>
           
           {/* Condensed Score Card / Performance Header */}
-          <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-4 bg-white dark:bg-[#121211] mb-5 shrink-0 flex items-center justify-between">
+          <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-4 bg-white dark:bg-[#18181B] mb-5 shrink-0 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <ScoreRing score={attempt.score} total={attempt.total_questions} size={60} strokeWidth={6} />
               <div className="flex flex-col">
@@ -151,7 +151,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex flex-col gap-4 shrink-0 mb-4">
-            <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 text-xs font-mono font-semibold text-gray-500">
+            <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#27272A] pb-3 text-xs font-mono font-semibold text-gray-500">
                <div className="flex items-center gap-3">
                  <span className="uppercase tracking-wider">Question Analysis</span>
                  {!showPassage && (
@@ -174,7 +174,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               <button
                 onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                 disabled={currentQuestionIndex === 0}
-                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#27272A] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
               >
                 ←
               </button>
@@ -184,7 +184,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                   const isSelected = attempt.answers[q.id];
                   const isCorrect = isSelected === q.correct_option;
                   
-                  let buttonStyle = 'border border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20';
+                  let buttonStyle = 'border border-[#E5E5E3] dark:border-[#27272A] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20';
                   if (idx === currentQuestionIndex) {
                     buttonStyle = 'bg-[#1A1A18] text-white dark:bg-[#FAFAF9] dark:text-black';
                   } else if (isCorrect) {
@@ -208,7 +208,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               <button
                 onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
                 disabled={currentQuestionIndex === questions.length - 1}
-                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#27272A] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
               >
                 →
               </button>
@@ -238,9 +238,9 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
       {/* Share Image Generator Modal */}
       {showShareModal && (
         <div className="fixed inset-0 z-50 bg-[#1A1A18]/40 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-[530px] border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-150 relative">
+          <div className="w-full max-w-[530px] border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-150 relative">
             
-            <div className="flex justify-between items-center border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3">
+            <div className="flex justify-between items-center border-b border-[#E5E5E3] dark:border-[#27272A] pb-3">
               <h3 className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4 text-[#4F46E5] dark:text-[#6366F1]" />
                 Shareable Card Preview
@@ -254,7 +254,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Render Card exactly in 500x500 square box for social platforms */}
-            <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-md overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-black/20 p-2">
+            <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-md overflow-hidden flex items-center justify-center bg-gray-50 dark:bg-black/20 p-2">
               <div 
                 ref={shareCardRef}
                 className="w-[500px] h-[500px] bg-[#FAFAF9] text-[#1A1A18] p-10 flex flex-col justify-between border border-[#E5E5E3]"

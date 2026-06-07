@@ -95,7 +95,7 @@ export default function TopNav() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9]/80 dark:bg-[#121211]/80 backdrop-blur-md transition-colors duration-150">
+    <nav className="sticky top-0 z-40 w-full border-b border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9]/80 dark:bg-[#18181B]/80 backdrop-blur-md transition-colors duration-150">
       <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         
         {/* Logo */}
@@ -156,7 +156,7 @@ export default function TopNav() {
           <button
             onClick={toggleDarkMode}
             aria-label="Toggle dark mode"
-            className="w-8 h-8 rounded-md border border-[#E5E5E3] dark:border-[#2E2E2C] flex items-center justify-center text-gray-500 hover:text-[#1A1A18] dark:hover:text-[#FAFAF9] transition-colors"
+            className="w-8 h-8 rounded-md border border-[#E5E5E3] dark:border-[#27272A] flex items-center justify-center text-gray-500 hover:text-[#1A1A18] dark:hover:text-[#FAFAF9] transition-colors"
           >
             {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
@@ -177,7 +177,7 @@ export default function TopNav() {
                   onMouseEnter={() => setMenuOpen(true)}
                   onMouseLeave={() => setMenuOpen(false)}
                 >
-                  <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full bg-[#E5E5E3] dark:bg-[#2E2E2C] flex items-center justify-center text-sm font-bold text-[#1A1A18] dark:text-[#FAFAF9] overflow-hidden border border-[#E5E5E3] dark:border-[#2E2E2C] block">
+                  <button onClick={() => setMenuOpen(!menuOpen)} className="w-8 h-8 rounded-full bg-[#E5E5E3] dark:bg-[#27272A] flex items-center justify-center text-sm font-bold text-[#1A1A18] dark:text-[#FAFAF9] overflow-hidden border border-[#E5E5E3] dark:border-[#27272A] block">
                     {user.avatar_url ? (
                       <img src={user.avatar_url} alt={user.name || ''} className="w-full h-full object-cover" />
                     ) : (
@@ -188,14 +188,14 @@ export default function TopNav() {
                   {/* Dropdown menu */}
                   {menuOpen && (
                     <div className="absolute right-0 top-full pt-2 w-48">
-                      <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] bg-white dark:bg-[#121211] rounded-md shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100">
-                        <div className="px-4 py-2 border-b border-[#E5E5E3] dark:border-[#2E2E2C] text-xs font-semibold text-gray-500 truncate dark:text-gray-400">
+                      <div className="border border-[#E5E5E3] dark:border-[#27272A] bg-white dark:bg-[#18181B] rounded-md shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100">
+                        <div className="px-4 py-2 border-b border-[#E5E5E3] dark:border-[#27272A] text-xs font-semibold text-gray-500 truncate dark:text-gray-400">
                       Signed in as <br />
                       <span className="font-mono text-[#1A1A18] dark:text-[#FAFAF9] font-bold">{user.name}</span>
                     </div>
 
                     {isAdmin && (
-                      <Link href="/admin" onClick={() => setMenuOpen(false)} className="block w-full text-left px-4 py-2 text-xs text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 font-bold border-b border-[#E5E5E3] dark:border-[#2E2E2C]">
+                      <Link href="/admin" onClick={() => setMenuOpen(false)} className="block w-full text-left px-4 py-2 text-xs text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20 font-bold border-b border-[#E5E5E3] dark:border-[#27272A]">
                         <div className="flex items-center gap-1.5">
                           <Sparkles className="w-3.5 h-3.5" />
                           Admin Portal
@@ -238,7 +238,7 @@ export default function TopNav() {
                 <div className="flex items-center gap-2">
                   <Link
                     href="/auth/login"
-                    className="px-3.5 py-1.5 text-xs font-semibold font-mono border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 rounded-md text-[#1A1A18] dark:text-[#FAFAF9] transition-colors"
+                    className="px-3.5 py-1.5 text-xs font-semibold font-mono border border-[#E5E5E3] dark:border-[#27272A] hover:border-gray-400 dark:hover:border-gray-600 rounded-md text-[#1A1A18] dark:text-[#FAFAF9] transition-colors"
                   >
                     Log In
                   </Link>

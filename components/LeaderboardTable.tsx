@@ -43,7 +43,7 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
     <div className="flex flex-col gap-8 w-full">
       {/* Top 3 Podium */}
       {podiumEntries.length > 0 && (
-        <div className="grid grid-cols-3 gap-3 md:gap-6 items-end justify-center py-6 border-b border-[#E5E5E3] dark:border-[#2E2E2C] max-w-2xl mx-auto w-full">
+        <div className="grid grid-cols-3 gap-3 md:gap-6 items-end justify-center py-6 border-b border-[#E5E5E3] dark:border-[#27272A] max-w-2xl mx-auto w-full">
           {/* 2nd Place */}
           {podiumEntries[1] && (
             <div className="flex flex-col items-center">
@@ -71,7 +71,7 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
                   {podiumEntries[1].weekly_score} pts
                 </p>
               </div>
-              <div className="w-full bg-slate-100 dark:bg-[#1C1C1A] border border-[#E5E5E3] dark:border-[#2E2E2C] h-16 rounded-t-lg mt-3 flex items-center justify-center">
+              <div className="w-full bg-slate-100 dark:bg-[#1C1C1A] border border-[#E5E5E3] dark:border-[#27272A] h-16 rounded-t-lg mt-3 flex items-center justify-center">
                 <span className="font-serif text-xl font-bold text-slate-400">2nd</span>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
                   {podiumEntries[2].weekly_score} pts
                 </p>
               </div>
-              <div className="w-full bg-amber-50/20 dark:bg-amber-950/5 border border-[#E5E5E3] dark:border-[#2E2E2C] h-12 rounded-t-lg mt-3 flex items-center justify-center">
+              <div className="w-full bg-amber-50/20 dark:bg-amber-950/5 border border-[#E5E5E3] dark:border-[#27272A] h-12 rounded-t-lg mt-3 flex items-center justify-center">
                 <span className="font-serif text-lg font-bold text-amber-700">3rd</span>
               </div>
             </div>
@@ -146,10 +146,10 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
       )}
 
       {/* Leaderboard Table List */}
-      <div className="overflow-x-auto border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg">
+      <div className="overflow-x-auto border border-[#E5E5E3] dark:border-[#27272A] rounded-lg">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-50 dark:bg-[#121211] border-b border-[#E5E5E3] dark:border-[#2E2E2C] text-xs font-mono font-semibold text-gray-500 uppercase">
+            <tr className="bg-gray-50 dark:bg-[#18181B] border-b border-[#E5E5E3] dark:border-[#27272A] text-xs font-mono font-semibold text-gray-500 uppercase">
               <th className="px-5 py-3.5 text-center w-16">Rank</th>
               <th className="px-5 py-3.5">User</th>
               <th className="px-5 py-3.5 text-center w-24">Weekly Score</th>
@@ -157,7 +157,7 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
               <th className="px-5 py-3.5 text-center w-24">Streak</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#E5E5E3] dark:divide-[#2E2E2C] text-sm">
+          <tbody className="divide-y divide-[#E5E5E3] dark:divide-[#27272A] text-sm">
             {entries.map((entry, index) => {
               const rank = index + 1;
               const isCurrentUser = entry.id === currentUserId;
@@ -177,10 +177,10 @@ export default function LeaderboardTable({ entries, currentUserId }: Leaderboard
                         <img
                           src={entry.avatar_url}
                           alt={entry.name || ''}
-                          className="w-8 h-8 rounded-full object-cover border border-[#E5E5E3] dark:border-[#2E2E2C]"
+                          className="w-8 h-8 rounded-full object-cover border border-[#E5E5E3] dark:border-[#27272A]"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-[#E5E5E3]/40 dark:bg-[#2E2E2C]/50 flex items-center justify-center font-mono font-bold text-xs text-gray-600 dark:text-gray-400">
+                        <div className="w-8 h-8 rounded-full bg-[#E5E5E3]/40 dark:bg-[#27272A]/50 flex items-center justify-center font-mono font-bold text-xs text-gray-600 dark:text-gray-400">
                           {getInitials(entry.name)}
                         </div>
                       )}

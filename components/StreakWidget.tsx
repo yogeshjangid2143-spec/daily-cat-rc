@@ -68,7 +68,7 @@ export default function StreakWidget({
   const { days: last7Days, attemptedToday } = getLast7Days();
 
   return (
-    <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-4">
+    <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-4">
       {/* Widget Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -98,7 +98,7 @@ export default function StreakWidget({
       </div>
 
       {/* 7-day strip */}
-      <div className="grid grid-cols-7 gap-1.5 border-t border-b border-[#E5E5E3] dark:border-[#2E2E2C] py-4 select-none">
+      <div className="grid grid-cols-7 gap-1.5 border-t border-b border-[#E5E5E3] dark:border-[#27272A] py-4 select-none">
         {last7Days.map((day) => (
           <div key={day.dateStr} className="flex flex-col items-center gap-1.5">
             <span className="font-mono text-[10px] text-gray-400 dark:text-gray-500">

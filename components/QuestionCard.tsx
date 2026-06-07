@@ -37,10 +37,10 @@ export default function QuestionCard({
   };
 
   return (
-    <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-4 select-none">
+    <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#18181B] flex flex-col gap-4 select-none">
       {/* Question Header */}
       <div className="flex items-start gap-3">
-        <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-[#E5E5E3] dark:bg-[#2E2E2C] text-xs font-mono font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+        <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-[#E5E5E3] dark:bg-[#27272A] text-xs font-mono font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
           {questionIndex + 1}
         </span>
         <div className="flex flex-col gap-1">
@@ -61,8 +61,8 @@ export default function QuestionCard({
           const isSelected = selectedAnswer === opt.key;
           const isCorrect = correctAnswer === opt.key;
           
-          let cardStyle = "border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 bg-white dark:bg-black/20 text-[#1A1A18] dark:text-gray-300";
-          let badgeStyle = "bg-[#FAFAF9] dark:bg-[#121211] border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-500";
+          let cardStyle = "border-[#E5E5E3] dark:border-[#27272A] hover:border-gray-400 dark:hover:border-gray-600 bg-white dark:bg-black/20 text-[#1A1A18] dark:text-gray-300";
+          let badgeStyle = "bg-[#FAFAF9] dark:bg-[#18181B] border-[#E5E5E3] dark:border-[#27272A] text-gray-500";
 
           if (isCompleted) {
             if (isCorrect) {
@@ -72,7 +72,7 @@ export default function QuestionCard({
               cardStyle = "border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 text-rose-900 dark:text-rose-300";
               badgeStyle = "bg-rose-500 text-white border-rose-500";
             } else {
-              cardStyle = "border-[#E5E5E3] dark:border-[#2E2E2C] opacity-60 text-gray-400 dark:text-gray-600";
+              cardStyle = "border-[#E5E5E3] dark:border-[#27272A] opacity-60 text-gray-400 dark:text-gray-600";
             }
           } else if (isSelected) {
             cardStyle = "border-[#4F46E5] dark:border-[#6366F1] bg-[#4F46E5]/5 dark:bg-[#6366F1]/5 text-[#4F46E5] dark:text-[#6366F1]";

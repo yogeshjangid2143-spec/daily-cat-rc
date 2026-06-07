@@ -33,7 +33,7 @@ export default function TimerDisplay({ onTick, active }: TimerDisplayProps) {
 
   return (
     <div className="flex flex-col items-end gap-1.5">
-      <div className="flex items-center gap-2 px-3 py-1.5 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-md bg-[#FAFAF9] dark:bg-[#121211] font-mono text-sm select-none">
+      <div className="flex items-center gap-2 px-3 py-1.5 border border-[#E5E5E3] dark:border-[#27272A] rounded-md bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-sm select-none">
         <Clock className="w-4 h-4 text-[#4F46E5] dark:text-[#6366F1]" />
         <span className="font-semibold text-[#1A1A18] dark:text-[#FAFAF9]">
           {formatTime(seconds)}

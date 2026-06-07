@@ -81,7 +81,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href={isLoggedIn ? "/rc/today" : "/auth/login"}
-            className="px-6 py-3 border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-semibold text-sm rounded transition-all duration-150"
+            className="px-6 py-3 border border-[#E5E5E3] dark:border-[#27272A] hover:border-gray-400 dark:hover:border-gray-600 text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-semibold text-sm rounded transition-all duration-150"
           >
             See Today's RC
           </Link>
@@ -93,15 +93,15 @@ export default function LandingPage() {
         
         {/* Left Side: Blurred/Locked Sample Passage Card */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 text-xs font-mono text-gray-400">
+          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#27272A] pb-3 text-xs font-mono text-gray-400">
             <span className="uppercase tracking-wider">Today's RC Sneak Peek</span>
             <span>Est. time: 12 mins</span>
           </div>
 
-          <div className="relative border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] overflow-hidden select-none">
+          <div className="relative border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] overflow-hidden select-none">
             {/* Blurring overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white dark:via-black/40 dark:to-[#121211] backdrop-blur-[3px] flex flex-col items-center justify-center p-6 z-10 text-center">
-              <div className="w-12 h-12 rounded-full border border-[#E5E5E3] dark:border-[#2E2E2C] bg-[#FAFAF9]/90 dark:bg-[#121211]/90 flex items-center justify-center mb-4">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white dark:via-black/40 dark:to-[#18181B] backdrop-blur-[3px] flex flex-col items-center justify-center p-6 z-10 text-center">
+              <div className="w-12 h-12 rounded-full border border-[#E5E5E3] dark:border-[#27272A] bg-[#FAFAF9]/90 dark:bg-[#18181B]/90 flex items-center justify-center mb-4">
                 <Lock className="w-5 h-5 text-[#4F46E5] dark:text-[#6366F1]" />
               </div>
               <h3 className="font-serif text-2xl font-bold mb-1.5 text-[#1A1A18] dark:text-[#FAFAF9]">
@@ -152,7 +152,7 @@ export default function LandingPage() {
           <div className="flex flex-col gap-6">
             {features.map((f, i) => (
               <div key={i} className="flex gap-4 items-start">
-                <div className="w-10 h-10 rounded-md border border-[#E5E5E3] dark:border-[#2E2E2C] bg-white dark:bg-[#121211] flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-md border border-[#E5E5E3] dark:border-[#27272A] bg-white dark:bg-[#18181B] flex items-center justify-center flex-shrink-0">
                   {f.icon}
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -171,7 +171,7 @@ export default function LandingPage() {
       </div>
 
       {/* Footer copyright */}
-      <div className="mt-24 w-full border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-gray-400">
+      <div className="mt-24 w-full border-t border-[#E5E5E3] dark:border-[#27272A] pt-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-gray-400">
         <span>&copy; {new Date().getFullYear()} dailycatrc.com. All rights reserved.</span>
         <div className="flex gap-4 mt-2 md:mt-0">
           <span className="hover:text-gray-600 cursor-pointer">Terms</span>

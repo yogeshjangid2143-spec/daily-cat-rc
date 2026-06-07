@@ -112,7 +112,7 @@ export default function RCPage() {
   if (loading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 gap-4">
-        <div className="w-10 h-10 rounded-full border-2 border-[#E5E5E3] dark:border-[#2E2E2C] border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
+        <div className="w-10 h-10 rounded-full border-2 border-[#E5E5E3] dark:border-[#27272A] border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
         <span className="font-mono text-xs text-gray-500 animate-pulse-glow">Preparing today's CAT RC passage...</span>
       </div>
     );
@@ -142,14 +142,14 @@ export default function RCPage() {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-7xl w-full mx-auto px-4 md:px-6 py-6 gap-6 items-stretch">
         
         {/* Left Column: Passage Panel */}
-        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#2E2E2C] animate-fade-in">
+        <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto pr-2 border-r border-transparent lg:border-[#E5E5E3] lg:dark:border-[#27272A] animate-fade-in">
           <PassagePanel passage={passage} />
         </div>
 
         {/* Right Column: Questions Panel */}
         <div className="lg:col-span-6 flex flex-col h-full lg:max-h-[calc(100vh-14rem)] lg:pl-2 animate-slide-in-right">
           
-          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0 min-h-[44px]">
+          <div className="flex items-center justify-between border-b border-[#E5E5E3] dark:border-[#27272A] pb-3 mb-4 text-xs font-mono font-semibold text-gray-500 shrink-0 min-h-[44px]">
             <span className="uppercase tracking-wider">{Object.keys(answers).length} of {questions.length} answered</span>
             <TimerDisplay active={!submitting} onTick={handleTimerTick} />
           </div>
@@ -168,14 +168,14 @@ export default function RCPage() {
           </div>
 
           {/* Navigation and Submit Action Block (Anchored at Bottom) */}
-          <div className="border-t border-[#E5E5E3] dark:border-[#2E2E2C] pt-3 pb-2 flex items-center justify-between shrink-0 mt-2">
+          <div className="border-t border-[#E5E5E3] dark:border-[#27272A] pt-3 pb-2 flex items-center justify-between shrink-0 mt-2">
             
             {/* Pagination Controls */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                 disabled={currentQuestionIndex === 0}
-                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === 0 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#27272A] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
               >
                 ←
               </button>
@@ -192,7 +192,7 @@ export default function RCPage() {
                         ? 'bg-[#1A1A18] text-white dark:bg-[#FAFAF9] dark:text-black'
                         : answers[q.id]
                         ? 'bg-green-500 text-white hover:bg-green-600 dark:bg-green-600/90 dark:hover:bg-green-500'
-                        : 'border border-[#E5E5E3] dark:border-[#2E2E2C] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20'
+                        : 'border border-[#E5E5E3] dark:border-[#27272A] text-gray-400 hover:bg-gray-50 dark:hover:bg-black/20'
                     }`}
                   >
                     {idx + 1}
@@ -203,7 +203,7 @@ export default function RCPage() {
               <button
                 onClick={() => setCurrentQuestionIndex(prev => Math.min(questions.length - 1, prev + 1))}
                 disabled={currentQuestionIndex === questions.length - 1}
-                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#2E2E2C] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
+                className={`px-2 sm:px-3 py-1.5 text-xs font-mono font-semibold rounded border ${currentQuestionIndex === questions.length - 1 ? 'border-transparent text-gray-300 dark:text-gray-700 cursor-not-allowed' : 'border-[#E5E5E3] dark:border-[#27272A] text-[#1A1A18] dark:text-[#FAFAF9] hover:bg-gray-50 dark:hover:bg-black/20 transition-colors'}`}
               >
                 →
               </button>
@@ -230,7 +230,7 @@ export default function RCPage() {
       {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 bg-[#1A1A18]/40 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-[400px] border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-6 bg-white dark:bg-[#121211] flex flex-col gap-5 animate-in fade-in zoom-in-95 duration-150">
+          <div className="w-full max-w-[400px] border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col gap-5 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex flex-col gap-1.5 text-center">
               <h3 className="font-serif text-2xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
                 Submit Your Attempt?
@@ -243,7 +243,7 @@ export default function RCPage() {
             <div className="grid grid-cols-2 gap-3 mt-1 font-mono text-xs">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="w-full py-2.5 border border-[#E5E5E3] dark:border-[#2E2E2C] hover:bg-gray-50 dark:hover:bg-black/15 text-[#1A1A18] dark:text-[#FAFAF9] font-semibold rounded transition-colors"
+                className="w-full py-2.5 border border-[#E5E5E3] dark:border-[#27272A] hover:bg-gray-50 dark:hover:bg-black/15 text-[#1A1A18] dark:text-[#FAFAF9] font-semibold rounded transition-colors"
               >
                 Go Back
               </button>

@@ -156,7 +156,7 @@ export default function AdminPortal() {
 
   if (!isAdmin) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center bg-[#FAFAF9] dark:bg-[#121211] p-6 gap-3">
+      <div className="flex-1 flex flex-col items-center justify-center bg-[#FAFAF9] dark:bg-[#18181B] p-6 gap-3">
         <div className="w-8 h-8 rounded-full border-2 border-gray-200 border-t-[#4F46E5] animate-spin" />
         <span className="font-mono text-xs text-gray-500">Verifying Admin Privileges...</span>
       </div>
@@ -164,7 +164,7 @@ export default function AdminPortal() {
   }
 
   return (
-    <div className="flex-1 bg-[#FAFAF9] dark:bg-[#121211] min-h-screen p-4 md:p-8">
+    <div className="flex-1 bg-[#FAFAF9] dark:bg-[#18181B] min-h-screen p-4 md:p-8">
       <div className="max-w-5xl mx-auto flex flex-col gap-8">
         
         {/* Header */}
@@ -203,18 +203,18 @@ export default function AdminPortal() {
           
           {/* Passage Settings */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#2E2E2C]">
-              <h2 className="font-mono font-bold text-xs text-gray-500 mb-4 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-2">PASSAGE METADATA</h2>
+            <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
+              <h2 className="font-mono font-bold text-xs text-gray-500 mb-4 border-b border-[#E5E5E3] dark:border-[#27272A] pb-2">PASSAGE METADATA</h2>
               
               <div className="flex flex-col gap-4">
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   Publish Date
-                  <input type="date" value={passage.published_date} onChange={e => setPassage({...passage, published_date: e.target.value})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-[#FAFAF9] dark:bg-[#121211] font-mono text-xs" />
+                  <input type="date" value={passage.published_date} onChange={e => setPassage({...passage, published_date: e.target.value})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs" />
                 </label>
                 
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   Topic
-                  <select value={passage.topic} onChange={e => setPassage({...passage, topic: e.target.value})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-[#FAFAF9] dark:bg-[#121211] font-mono text-xs">
+                  <select value={passage.topic} onChange={e => setPassage({...passage, topic: e.target.value})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs">
                     <option value="economics">Economics</option>
                     <option value="science">Science & Tech</option>
                     <option value="literature">Literature / Arts</option>
@@ -225,15 +225,15 @@ export default function AdminPortal() {
 
                 <label className="flex flex-col gap-1.5 text-sm font-semibold">
                   Difficulty (1=Mod, 2=Hard, 3=V.Hard)
-                  <input type="number" min="1" max="3" value={passage.difficulty} onChange={e => setPassage({...passage, difficulty: parseInt(e.target.value)})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-[#FAFAF9] dark:bg-[#121211] font-mono text-xs" />
+                  <input type="number" min="1" max="3" value={passage.difficulty} onChange={e => setPassage({...passage, difficulty: parseInt(e.target.value)})} className="px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] font-mono text-xs" />
                 </label>
               </div>
             </div>
           </div>
 
           {/* Passage Content Editor */}
-          <div className="lg:col-span-8 bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#2E2E2C]">
-            <h2 className="font-mono font-bold text-xs text-gray-500 mb-4 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-2">PASSAGE CONTENT</h2>
+          <div className="lg:col-span-8 bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
+            <h2 className="font-mono font-bold text-xs text-gray-500 mb-4 border-b border-[#E5E5E3] dark:border-[#27272A] pb-2">PASSAGE CONTENT</h2>
             
             <div className="flex flex-col gap-4">
               <input
@@ -241,13 +241,13 @@ export default function AdminPortal() {
                 placeholder="Passage Title..."
                 value={passage.title}
                 onChange={e => setPassage({...passage, title: e.target.value})}
-                className="text-xl font-serif font-bold px-4 py-3 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-[#FAFAF9] dark:bg-[#121211] w-full focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="text-xl font-serif font-bold px-4 py-3 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] w-full focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
               <textarea
                 placeholder="Paste the full passage text here..."
                 value={passage.content}
                 onChange={e => setPassage({...passage, content: e.target.value})}
-                className="h-64 font-sans text-sm leading-relaxed px-4 py-3 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-[#FAFAF9] dark:bg-[#121211] w-full resize-y focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="h-64 font-sans text-sm leading-relaxed px-4 py-3 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-[#FAFAF9] dark:bg-[#18181B] w-full resize-y focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
           </div>
@@ -255,12 +255,12 @@ export default function AdminPortal() {
         </div>
 
         {/* Questions Editor */}
-        <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#2E2E2C]">
-          <h2 className="font-mono font-bold text-xs text-gray-500 mb-6 border-b border-[#E5E5E3] dark:border-[#2E2E2C] pb-2">5 COMPREHENSION QUESTIONS</h2>
+        <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
+          <h2 className="font-mono font-bold text-xs text-gray-500 mb-6 border-b border-[#E5E5E3] dark:border-[#27272A] pb-2">5 COMPREHENSION QUESTIONS</h2>
           
           <div className="grid grid-cols-1 gap-8">
             {questions.map((q, i) => (
-              <div key={i} className="flex flex-col gap-3 p-5 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg bg-[#FAFAF9] dark:bg-[#121211]">
+              <div key={i} className="flex flex-col gap-3 p-5 border border-[#E5E5E3] dark:border-[#27272A] rounded-lg bg-[#FAFAF9] dark:bg-[#18181B]">
                 <div className="flex items-center gap-3">
                   <span className="bg-black text-white dark:bg-white dark:text-black w-6 h-6 flex items-center justify-center rounded text-xs font-mono font-bold">{i+1}</span>
                   <input
@@ -268,9 +268,9 @@ export default function AdminPortal() {
                     placeholder="Question Text..."
                     value={q.question_text}
                     onChange={e => updateQuestion(i, 'question_text', e.target.value)}
-                    className="flex-1 px-3 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-white dark:bg-black text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-white dark:bg-black text-sm font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   />
-                  <select value={q.question_type} onChange={e => updateQuestion(i, 'question_type', e.target.value)} className="w-32 px-2 py-2 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-white dark:bg-black font-mono text-xs">
+                  <select value={q.question_type} onChange={e => updateQuestion(i, 'question_type', e.target.value)} className="w-32 px-2 py-2 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-white dark:bg-black font-mono text-xs">
                     <option value="main_idea">Main Idea</option>
                     <option value="inference">Inference</option>
                     <option value="factual">Factual</option>
@@ -288,7 +288,7 @@ export default function AdminPortal() {
                         placeholder={`Option ${opt.toUpperCase()}...`}
                         value={q[`option_${opt}`]}
                         onChange={e => updateQuestion(i, `option_${opt}`, e.target.value)}
-                        className="flex-1 px-3 py-1.5 border border-[#E5E5E3] dark:border-[#2E2E2C] rounded bg-white dark:bg-black text-xs font-sans focus:outline-none"
+                        className="flex-1 px-3 py-1.5 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-white dark:bg-black text-xs font-sans focus:outline-none"
                       />
                     </div>
                   ))}
