@@ -127,22 +127,21 @@ export default function Dashboard() {
           'q5': 'B',
         };
 
-        // If using real database, fetch the actual question details
-        if (isSupabaseConfigured && supabase) {
-          const passageIds = Array.from(new Set(userAttempts.map(a => a.passage_id)));
-          if (passageIds.length > 0) {
-            const { data: questionsData } = await supabase
-              .from('questions')
-              .select('id, question_type, correct_option')
-              .in('passage_id', passageIds);
-              
-            if (questionsData) {
-              questionsData.forEach(q => {
+        // Fetch actual question details securely via mockDb (which hits API routes if live)
+        const passageIds = Array.from(new Set(userAttempts.map(a => a.passage_id)));
+        if (passageIds.length > 0) {
+          // Parallel fetch for speed
+          const promises = passageIds.map(pid => mockDb.getPassageById(pid, true).catch(() => null));
+          const results = await Promise.all(promises);
+          
+          results.forEach(res => {
+            if (res && res.questions) {
+              res.questions.forEach(q => {
                 typesMap[q.id] = q.question_type || 'inference';
                 correctMap[q.id] = q.correct_option;
               });
             }
-          }
+          });
         }
 
         const breakdown: Record<string, { correct: number; total: number }> = {
