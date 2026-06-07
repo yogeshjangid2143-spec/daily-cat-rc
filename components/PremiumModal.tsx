@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { Sparkles, X, Zap, Target, BarChart2, BookOpen } from 'lucide-react';
 
+import { createPortal } from 'react-dom';
+
 interface PremiumModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,16 +42,16 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6">
+  const modalContent = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-black/50 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] rounded-2xl shadow-2xl overflow-hidden animate-fade-in-up [animation-duration:300ms]">
+      <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] rounded-2xl shadow-2xl animate-fade-in-up [animation-duration:300ms]">
         
         {/* Close Button */}
         <button 
@@ -160,4 +162,6 @@ export default function PremiumModal({ isOpen, onClose }: PremiumModalProps) {
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
