@@ -51,12 +51,14 @@ export default function ScoreRing({
 
       {/* Label in center */}
       <div className="absolute flex flex-col items-center justify-center text-center">
-        <span className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+        <span className={`font-serif font-bold text-[#1A1A18] dark:text-[#FAFAF9] ${size < 100 ? 'text-lg' : 'text-3xl'}`}>
           {score}/{total}
         </span>
-        <span className="font-mono text-xs font-semibold text-gray-500 dark:text-gray-400">
-          {Math.round(percentage)}%
-        </span>
+        {size >= 100 && (
+          <span className="font-mono text-xs font-semibold text-gray-500 dark:text-gray-400">
+            {Math.round(percentage)}%
+          </span>
+        )}
       </div>
     </div>
   );
