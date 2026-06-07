@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FAFAF9;
+  --foreground: #1A1A18;
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+}
+
+.dark {
+  --background: #121211;
+  --foreground: #FAFAF9;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, .font-serif-heading {
+  font-family: var(--font-serif);
+}
+
+/* Custom Scrollbar for a premium, clean layout */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E5E5E3;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #2E2E2C;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C4C4C2;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4E4E4C;
+}
