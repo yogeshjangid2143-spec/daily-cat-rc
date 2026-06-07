@@ -27,7 +27,6 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [loading, setLoading] = useState(true);
-  const [updatingPro, setUpdatingPro] = useState(false);
   const [passageMap, setPassageMap] = useState<Record<string, { title: string; topic: string }>>({});
   
   // Pagination
@@ -152,43 +151,6 @@ export default function ProfilePage() {
     window.dispatchEvent(new Event('user-state-change'));
   };
 
-  const handleUpgradePro = async () => {
-    if (!user) return;
-    setUpdatingPro(true);
-    
-    try {
-      if (isSupabaseConfigured && supabase) {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ is_pro: true })
-          .eq('id', user.id);
-        if (error) throw error;
-      } else {
-        // Simulate payment / gateway redirect
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-      }
-    } catch (err: any) {
-      alert(err.message || "Failed to upgrade pro status in Supabase.");
-      setUpdatingPro(false);
-      return;
-    }
-    
-    const { profiles } = getMockStorage();
-    const updatedProfile: Profile = {
-      ...user,
-      is_pro: true,
-    };
-
-    setMockStorage({
-      profiles: profiles.map(p => p.id === user.id ? updatedProfile : p),
-      currentUser: updatedProfile,
-    });
-
-    setUser(updatedProfile);
-    setUpdatingPro(false);
-    window.dispatchEvent(new Event('user-state-change'));
-  };
-
   if (loading || !user) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 gap-3">
@@ -215,10 +177,10 @@ export default function ProfilePage() {
     <div className="flex-1 max-w-4xl w-full mx-auto px-4 md:px-6 py-8 flex flex-col gap-8">
       
       {/* Profile Header Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+      <div className="grid grid-cols-1 gap-6 items-stretch">
         
         {/* Left Side: Avatar, details */}
-        <div className="md:col-span-8 border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+        <div className="border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col sm:flex-row gap-6 items-start sm:items-center">
           
           <div className="w-20 h-20 rounded-full bg-[#E5E5E3] dark:bg-[#27272A] flex items-center justify-center font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] border border-[#E5E5E3] dark:border-[#27272A] overflow-hidden flex-shrink-0">
             {user.avatar_url ? (
@@ -276,35 +238,6 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Right Side: Pro upgrade widget */}
-        <div className="md:col-span-4 border border-[#E5E5E3] dark:border-[#27272A] rounded-lg p-6 bg-white dark:bg-[#18181B] flex flex-col justify-between gap-4">
-          {user.is_pro ? (
-            <div className="flex flex-col gap-2 text-center items-center my-auto">
-              <Sparkles className="w-8 h-8 text-[#4F46E5] dark:text-[#6366F1] animate-bounce" />
-              <p className="font-serif text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">Pro Access is Active</p>
-              <p className="font-sans text-[11px] text-gray-400">Thank you for preparing with dailycatrc! You have access to all dashboards.</p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3 h-full justify-between">
-              <div>
-                <p className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
-                  Go Professional
-                </p>
-                <p className="font-sans text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed mt-1">
-                  Access 500+ past CAT-level RCs, full accuracy analytics, and percentile tracking.
-                </p>
-              </div>
-              <button
-                onClick={handleUpgradePro}
-                disabled={updatingPro}
-                className="w-full py-2 bg-[#4F46E5] hover:bg-[#4338CA] dark:bg-[#6366F1] dark:hover:bg-[#4F46E5] text-white font-mono font-semibold text-xs rounded transition-colors duration-150 flex items-center justify-center gap-2"
-              >
-                {updatingPro ? 'Processing...' : 'Upgrade to Pro — ₹999'}
-              </button>
-            </div>
-          )}
         </div>
 
       </div>
