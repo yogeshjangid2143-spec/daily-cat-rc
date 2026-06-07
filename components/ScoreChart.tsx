@@ -71,7 +71,7 @@ export default function ScoreChart({ data }: ScoreChartProps) {
   }
 
   return (
-    <div className="w-full h-[240px]">
+    <div className="w-full h-[240px] outline-none [&_.recharts-wrapper]:outline-none [&_.recharts-surface]:outline-none">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
