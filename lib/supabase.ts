@@ -217,85 +217,17 @@ export const setMockStorage = (data: { profiles?: Profile[]; attempts?: Attempt[
 export const mockDb = {
   getTodayPassage: async (): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
-      const todayStr = new Date().toISOString().split('T')[0];
-      let { data: passage } = await supabase
-        .from('passages')
-        .select('*')
-        .eq('published_date', todayStr)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (!passage) {
-        // Fallback to latest active passage
-        const { data: latestPassages } = await supabase
-          .from('passages')
-          .select('*')
-          .eq('is_active', true)
-          .order('published_date', { ascending: false })
-          .limit(1);
-        if (latestPassages && latestPassages.length > 0) {
-          passage = latestPassages[0];
+      try {
+        const res = await fetch('/api/passage/today');
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Failed to fetch today passage');
         }
+        return await res.json();
+      } catch (e) {
+        console.error("Fetch API Error:", e);
+        throw e;
       }
-
-      if (!passage) {
-        // Automatically seed the initial sample passage if the DB is completely empty!
-        const seedPassage = { ...SAMPLE_PASSAGE, published_date: todayStr };
-        const { error: insertErr } = await supabase.from('passages').insert(seedPassage);
-        
-        if (!insertErr) {
-          const questionsToSeed = SAMPLE_QUESTIONS.map(q => ({
-            ...q,
-            passage_id: seedPassage.id
-          }));
-          await supabase.from('questions').insert(questionsToSeed);
-          passage = seedPassage;
-        } else {
-          // If insert failed (maybe another user seeded it simultaneously), try to fetch again
-          const { data: retryPassage } = await supabase
-            .from('passages')
-            .select('*')
-            .eq('is_active', true)
-            .order('published_date', { ascending: false })
-            .limit(1);
-            
-          if (retryPassage && retryPassage.length > 0) {
-            passage = retryPassage[0];
-          } else {
-            throw new Error('No active passage found, and automatic seeding failed.');
-          }
-        }
-      }
-
-      // Query questions, omitting correct_option and explanation to prevent client-side inspection
-      let { data: questions, error: qErr } = await supabase
-        .from('questions')
-        .select('id, passage_id, question_text, option_a, option_b, option_c, option_d, question_type, order_index, created_at')
-        .eq('passage_id', passage.id)
-        .order('order_index', { ascending: true });
-
-      if (qErr) throw qErr;
-
-      // Auto-heal: If questions are missing due to a previous seeding error, insert them now!
-      if (!questions || questions.length === 0) {
-        const questionsToSeed = SAMPLE_QUESTIONS.map(q => {
-          const { id, ...rest } = q; // Omit invalid 'qX' string so Supabase generates valid UUIDs
-          return { ...rest, passage_id: passage.id };
-        });
-        await supabase.from('questions').insert(questionsToSeed);
-        
-        const { data: retryQ } = await supabase
-          .from('questions')
-          .select('id, passage_id, question_text, option_a, option_b, option_c, option_d, question_type, order_index, created_at')
-          .eq('passage_id', passage.id)
-          .order('order_index', { ascending: true });
-        if (retryQ) questions = retryQ;
-      }
-
-      return {
-        passage: passage as Passage,
-        questions: questions as Question[],
-      };
     }
 
     return {
@@ -306,58 +238,18 @@ export const mockDb = {
 
   getTodayPassageWithAnswers: async (): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
-      const todayStr = new Date().toISOString().split('T')[0];
-      let { data: passage } = await supabase
-        .from('passages')
-        .select('*')
-        .eq('published_date', todayStr)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (!passage) {
-        // Fallback to latest active passage
-        const { data: latestPassages } = await supabase
-          .from('passages')
-          .select('*')
-          .eq('is_active', true)
-          .order('published_date', { ascending: false })
-          .limit(1);
-        if (latestPassages && latestPassages.length > 0) {
-          passage = latestPassages[0];
-        }
+      try {
+        const res = await fetch('/api/passage/today');
+        if (!res.ok) throw new Error('Failed to fetch today passage');
+        const data = await res.json();
+        // Now fetch it explicitly with answers
+        const ansRes = await fetch(`/api/passage/${data.passage.id}?answers=true`);
+        if (!ansRes.ok) throw new Error('Failed to fetch answers');
+        return await ansRes.json();
+      } catch (e) {
+        console.error("Fetch API Error:", e);
+        throw e;
       }
-
-      if (!passage) {
-        throw new Error('No active passage found.');
-      }
-
-      let { data: questions, error: qErr } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('passage_id', passage.id)
-        .order('order_index', { ascending: true });
-
-      if (qErr) throw qErr;
-
-      if (!questions || questions.length === 0) {
-        const questionsToSeed = SAMPLE_QUESTIONS.map(q => {
-          const { id, ...rest } = q;
-          return { ...rest, passage_id: passage.id };
-        });
-        await supabase.from('questions').insert(questionsToSeed);
-        
-        const { data: retryQ } = await supabase
-          .from('questions')
-          .select('*')
-          .eq('passage_id', passage.id)
-          .order('order_index', { ascending: true });
-        if (retryQ) questions = retryQ;
-      }
-
-      return {
-        passage: passage as Passage,
-        questions: questions as any as Question[],
-      };
     }
 
     return {
@@ -403,41 +295,28 @@ export const mockDb = {
     timeTaken: number
   ): Promise<{ score: number; total: number; streak_count: number; streak_freezes_left: number; preferred_difficulty: number }> => {
     if (isSupabaseConfigured && supabase) {
-      // First, get the correct answers to calculate the score
-      const { data: questions, error: qErr } = await supabase
-        .from('questions')
-        .select('id, correct_option')
-        .eq('passage_id', passageId);
-
-      if (qErr || !questions) throw new Error(qErr?.message || 'Failed to fetch questions');
-
-      let score = 0;
-      const total = questions.length;
-      questions.forEach(q => {
-        if (answers[q.id] === q.correct_option) {
-          score++;
+      try {
+        const res = await fetch('/api/attempts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            passage_id: passageId,
+            answers,
+            time_taken_seconds: timeTaken
+          })
+        });
+        
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Failed to submit attempt');
         }
-      });
-
-      // Call database RPC function
-      const { data, error } = await supabase.rpc('submit_attempt_and_update_streak', {
-        p_user_id: userId,
-        p_passage_id: passageId,
-        p_answers: answers,
-        p_score: score,
-        p_total_questions: total,
-        p_time_taken: timeTaken
-      });
-
-      if (error) throw error;
-
-      return {
-        score: data.score,
-        total: data.total_questions,
-        streak_count: data.streak_count,
-        streak_freezes_left: data.streak_freezes_left,
-        preferred_difficulty: data.preferred_difficulty
-      };
+        
+        return await res.json();
+      } catch (e) {
+        console.error("Submit API Error:", e);
+        throw e;
+      }
     }
 
     const { attempts, profiles, currentUser } = getMockStorage();
@@ -589,19 +468,12 @@ export const mockDb = {
 
   getTodayPercentile: async (score: number): Promise<number> => {
     if (isSupabaseConfigured && supabase) {
-      const todayStr = new Date().toISOString().split('T')[0];
-      const { data, error } = await supabase
-        .from('attempts')
-        .select('score')
-        .gte('completed_at', `${todayStr}T00:00:00Z`);
-
-      if (error || !data || data.length <= 1) {
+      const { data, error } = await supabase.rpc('get_today_percentile', { p_score: score });
+      if (error) {
+        console.error('Error fetching percentile:', error);
         return 100;
       }
-
-      const lowerScoresCount = data.filter(a => a.score < score).length;
-      const percentile = Math.round((lowerScoresCount / data.length) * 100);
-      return Math.max(10, Math.min(100, percentile));
+      return data;
     }
 
     const { attempts } = getMockStorage();
@@ -618,29 +490,19 @@ export const mockDb = {
     return Math.max(10, Math.min(100, percentile));
   },
 
-  getPassageById: async (idStr: string): Promise<{ passage: Passage; questions: Question[] }> => {
+  getPassageById: async (idStr: string, withAnswers = false): Promise<{ passage: Passage; questions: Question[] }> => {
     if (isSupabaseConfigured && supabase) {
-      const { data: passage } = await supabase
-        .from('passages')
-        .select('*')
-        .eq('id', idStr)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (!passage) throw new Error('No active passage found for this ID.');
-
-      let { data: questions, error: qErr } = await supabase
-        .from('questions')
-        .select('*')
-        .eq('passage_id', passage.id)
-        .order('order_index', { ascending: true });
-
-      if (qErr) throw qErr;
-
-      return {
-        passage: passage as Passage,
-        questions: questions as any as Question[],
-      };
+      try {
+        const res = await fetch(`/api/passage/${idStr}${withAnswers ? '?answers=true' : ''}`);
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.error || 'Failed to fetch passage by ID');
+        }
+        return await res.json();
+      } catch (e) {
+        console.error("Fetch API Error:", e);
+        throw e;
+      }
     }
 
     // Mock fallback

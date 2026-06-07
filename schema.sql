@@ -67,9 +67,8 @@ CREATE TABLE IF NOT EXISTS questions (
 -- Enable RLS on questions
 ALTER TABLE questions ENABLE ROW LEVEL SECURITY;
 
--- We will fetch questions without correct_option/explanation through an API route or filter columns
-CREATE POLICY "Allow public read on questions" ON questions
-  FOR SELECT USING (true);
+-- We will fetch questions without correct_option/explanation through a secure Next.js API route using the Service Role Key
+DROP POLICY IF EXISTS "Allow public read on questions" ON questions;
 
 -- 4. Create attempts table
 CREATE TABLE IF NOT EXISTS attempts (
@@ -166,8 +165,8 @@ BEGIN
   ELSIF v_last_active = v_yesterday THEN
     v_streak := v_streak + 1;
   ELSE
-    -- Check if streak freeze is available
-    IF v_freezes > 0 THEN
+    -- Check if streak freeze is available AND they only missed EXACTLY one day!
+    IF v_freezes > 0 AND v_last_active = (v_today - INTERVAL '2 days') THEN
       -- Use streak freeze, keep streak alive!
       v_streak := v_streak + 1;
       v_freezes := v_freezes - 1;
@@ -214,3 +213,23 @@ BEGIN
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 8. Secure Percentile Calculator (Bypasses RLS to count all today's scores)
+CREATE OR REPLACE FUNCTION get_today_percentile(p_score INT)
+RETURNS FLOAT AS $$
+DECLARE
+  v_total INT;
+  v_lower INT;
+BEGIN
+  SELECT COUNT(*) INTO v_total FROM attempts WHERE completed_at >= CURRENT_DATE;
+  
+  IF v_total <= 1 THEN
+    RETURN 100.0;
+  END IF;
+
+  SELECT COUNT(*) INTO v_lower FROM attempts WHERE completed_at >= CURRENT_DATE AND score < p_score;
+
+  RETURN GREATEST(10.0, LEAST(100.0, ROUND((v_lower::decimal / v_total) * 100)));
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
