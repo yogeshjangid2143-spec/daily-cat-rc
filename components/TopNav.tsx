@@ -234,20 +234,22 @@ export default function TopNav() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/auth/login"
-                  className="px-3.5 py-1.5 text-xs font-semibold font-mono border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 rounded-md text-[#1A1A18] dark:text-[#FAFAF9] transition-colors"
-                >
-                  Log In
-                </Link>
-                <Link
-                  href="/auth/signup"
-                  className="px-3.5 py-1.5 text-xs font-semibold font-mono bg-[#4F46E5] hover:bg-[#4338CA] dark:bg-[#6366F1] dark:hover:bg-[#4F46E5] rounded-md text-white transition-colors"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              !pathname.startsWith('/auth') && (
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/auth/login"
+                    className="px-3.5 py-1.5 text-xs font-semibold font-mono border border-[#E5E5E3] dark:border-[#2E2E2C] hover:border-gray-400 dark:hover:border-gray-600 rounded-md text-[#1A1A18] dark:text-[#FAFAF9] transition-colors"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="px-3.5 py-1.5 text-xs font-semibold font-mono bg-[#4F46E5] hover:bg-[#4338CA] dark:bg-[#6366F1] dark:hover:bg-[#4F46E5] rounded-md text-white transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )
             )
           )}
 
