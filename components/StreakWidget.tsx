@@ -20,6 +20,18 @@ export default function StreakWidget({
     const days = [];
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     
+    // Determine the "active streak boundary"
+    // If the user already solved today, the streak ends today.
+    // If not, the streak ended yesterday.
+    const dToday = new Date();
+    const yearToday = dToday.getFullYear();
+    const monthToday = String(dToday.getMonth() + 1).padStart(2, '0');
+    const dayToday = String(dToday.getDate()).padStart(2, '0');
+    const todayStr = `${yearToday}-${monthToday}-${dayToday}`;
+    const attemptedToday = attemptsDates.includes(todayStr);
+
+    const activeStreak = profile.streak_count || 0;
+
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
@@ -30,26 +42,30 @@ export default function StreakWidget({
       const dayName = weekdays[d.getDay()];
       const isToday = i === 0;
       
-      // Check if attempted
-      const attempted = attemptsDates.includes(dateStr);
+      // Calculate if this day falls within the mathematical streak
+      // If attemptedToday = true, streak covers days: 0, 1, ..., (activeStreak - 1)
+      // If attemptedToday = false, streak covers days: 1, 2, ..., activeStreak
+      let isWithinStreak = false;
+      if (attemptedToday) {
+        if (i < activeStreak) isWithinStreak = true;
+      } else {
+        if (i > 0 && i <= activeStreak) isWithinStreak = true;
+      }
+
+      // We also fall back to true if the database explicitly says they attempted
+      const attemptedExplicitly = attemptsDates.includes(dateStr);
       
       days.push({
         dateStr,
         dayName,
         isToday,
-        attempted,
+        attempted: isWithinStreak || attemptedExplicitly,
       });
     }
-    return days;
+    return { days, attemptedToday };
   };
 
-  const last7Days = getLast7Days();
-  const dToday = new Date();
-  const yearToday = dToday.getFullYear();
-  const monthToday = String(dToday.getMonth() + 1).padStart(2, '0');
-  const dayToday = String(dToday.getDate()).padStart(2, '0');
-  const todayStr = `${yearToday}-${monthToday}-${dayToday}`;
-  const attemptedToday = attemptsDates.includes(todayStr);
+  const { days: last7Days, attemptedToday } = getLast7Days();
 
   return (
     <div className="border border-[#E5E5E3] dark:border-[#2E2E2C] rounded-lg p-5 bg-[#FAFAF9] dark:bg-[#121211] flex flex-col gap-4">
