@@ -22,6 +22,7 @@ import { formatTime } from '@/lib/utils';
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<Profile | null>(null);
+  const [userEmail, setUserEmail] = useState<string>('');
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [editing, setEditing] = useState(false);
   const [nameInput, setNameInput] = useState('');
@@ -43,8 +44,15 @@ export default function ProfilePage() {
       let profile = currentUser;
       let userAttempts: Attempt[] = [];
 
+      let userEmail = `${currentUser.name?.toLowerCase().replace(/\s/g, '')}@dailycatrc.com`;
+
       try {
         if (isSupabaseConfigured && supabase) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user?.email) {
+            userEmail = session.user.email;
+          }
+
           // Fetch fresh profile from Supabase
           const { data: dbProfile, error: pErr } = await supabase
             .from('profiles')
@@ -79,6 +87,7 @@ export default function ProfilePage() {
 
       setUser(profile);
       setNameInput(profile.name || '');
+      setUserEmail(userEmail);
       
       // Sort attempts
       userAttempts.sort((a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime());
@@ -243,7 +252,7 @@ export default function ProfilePage() {
             <div className="flex flex-col gap-1.5 text-xs text-gray-500 dark:text-gray-400 font-mono">
               <span className="flex items-center gap-1.5">
                 <Mail className="w-4 h-4 text-gray-400" />
-                {user.name?.toLowerCase().replace(/\s/g, '')}@dailycatrc.com
+                {userEmail}
               </span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-gray-400" />
