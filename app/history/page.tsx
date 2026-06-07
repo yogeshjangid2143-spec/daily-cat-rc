@@ -61,7 +61,7 @@ export default function HistoryArchivePage() {
       </div>
 
       {/* Grid Layout for RCs */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {passages.length === 0 ? (
           <div className="col-span-full py-20 text-center text-gray-400 font-mono text-lg border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-2xl">
             The archive is currently empty.
