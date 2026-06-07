@@ -132,28 +132,12 @@ export default function Dashboard() {
 
         // Populate breakdown using user attempts
         userAttempts.forEach(att => {
-          // If it's a seeded attempt, we simulate mock category scores to look realistic
-          if (att.id.startsWith('seeded_')) {
-            breakdown['main_idea'].total += 1;
-            breakdown['main_idea'].correct += Math.random() > 0.3 ? 1 : 0;
-
-            breakdown['inference'].total += 2;
-            breakdown['inference'].correct += Math.random() > 0.6 ? 1 : 0; // deliberately lower to surface inference as weak area!
-
-            breakdown['factual'].total += 1;
-            breakdown['factual'].correct += Math.random() > 0.2 ? 1 : 0;
-
-            breakdown['tone'].total += 1;
-            breakdown['tone'].correct += Math.random() > 0.3 ? 1 : 0;
-          } else {
-            // Real attempts on today's passage
-            Object.entries(att.answers).forEach(([qId, ans]) => {
-              const qType = typesMap[qId] || 'inference';
-              const isCorrect = ans === (qId === 'q1' ? 'B' : qId === 'q2' ? 'B' : qId === 'q3' ? 'A' : qId === 'q4' ? 'C' : 'B');
-              breakdown[qType].total += 1;
-              if (isCorrect) breakdown[qType].correct += 1;
-            });
-          }
+          Object.entries(att.answers).forEach(([qId, ans]) => {
+            const qType = typesMap[qId] || 'inference';
+            const isCorrect = ans === (qId === 'q1' ? 'B' : qId === 'q2' ? 'B' : qId === 'q3' ? 'A' : qId === 'q4' ? 'C' : 'B');
+            breakdown[qType].total += 1;
+            if (isCorrect) breakdown[qType].correct += 1;
+          });
         });
 
         // Identify weak area
