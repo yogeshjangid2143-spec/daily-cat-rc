@@ -203,7 +203,7 @@ export default function TopNav() {
                       </Link>
                     )}
                     
-                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="block md:hidden px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-black/20">
+                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="block px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-black/20">
                       Profile
                     </Link>
                     <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block md:hidden px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-black/20">
