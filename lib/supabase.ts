@@ -432,64 +432,47 @@ export const mockDb = {
     
     if (isSupabaseConfigured && supabase) {
       try {
-        // Try to compute it manually from profiles and attempts to guarantee all live users are found,
-        // and to support "alltime" since the alltime_leaderboard view might not exist.
-        const { data: profiles } = await supabase.from('profiles').select('*');
-        const { data: attempts } = await supabase.from('attempts').select('*');
-        
-        if (profiles && attempts) {
-          liveEntries = profiles.map(p => {
-            const userAttempts = attempts.filter(a => a.user_id === p.id);
-            const filteredAttempts = userAttempts.filter(a => {
-              if (period === 'alltime') return true;
-              const date = new Date(a.completed_at);
-              // Calculate start of week (Monday)
-              const startOfWeek = new Date();
-              const day = startOfWeek.getDay();
-              const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
-              startOfWeek.setDate(diff);
-              startOfWeek.setHours(0, 0, 0, 0);
-              return date >= startOfWeek;
-            });
+        if (period === 'weekly') {
+          // Use the exact database view for weekly to ensure 100% accuracy
+          const { data, error } = await supabase.from('weekly_leaderboard').select('*').limit(50);
+          if (!error && data) {
+            liveEntries = data as LeaderboardEntry[];
+          } else if (error) {
+            console.error("Weekly leaderboard view error:", error);
+          }
+        } else {
+          // Manual calculation for All-Time since the view doesn't exist
+          const { data: profiles } = await supabase.from('profiles').select('*');
+          const { data: attempts } = await supabase.from('attempts').select('*');
+          
+          if (profiles && attempts) {
+            liveEntries = profiles.map(p => {
+              const userAttempts = attempts.filter(a => a.user_id === p.id);
+              
+              const totalScore = userAttempts.reduce((sum, a) => sum + Number(a.score), 0);
+              const totalQuestions = userAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
+              const avgAccuracy = totalQuestions > 0 
+                ? Math.round((totalScore / totalQuestions) * 1000) / 10 
+                : 0;
 
-            const totalScore = filteredAttempts.reduce((sum, a) => sum + Number(a.score), 0);
-            const totalQuestions = filteredAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
-            const avgAccuracy = totalQuestions > 0 
-              ? Math.round((totalScore / totalQuestions) * 1000) / 10 
-              : 0;
-
-            return {
-              id: p.id,
-              name: p.name || 'Anonymous User',
-              avatar_url: p.avatar_url,
-              streak_count: p.streak_count,
-              weekly_score: totalScore,
-              attempts_this_week: filteredAttempts.length,
-              avg_accuracy: avgAccuracy,
-            };
-          }).filter(e => period === 'alltime' || e.attempts_this_week > 0);
+              return {
+                id: p.id,
+                name: p.name || 'Anonymous User',
+                avatar_url: p.avatar_url,
+                streak_count: p.streak_count,
+                weekly_score: totalScore,
+                attempts_this_week: userAttempts.length,
+                avg_accuracy: avgAccuracy,
+              };
+            }).filter(e => e.attempts_this_week > 0);
+          }
         }
       } catch (err) {
-        console.error("Leaderboard manual fetch error:", err);
+        console.error("Leaderboard fetch error:", err);
       }
     }
 
-    // Always mix in mock users so the board doesn't look empty for new platforms
-    const mockEntries: LeaderboardEntry[] = INITIAL_LEADERBOARD_USERS.map(u => ({
-      id: u.id,
-      name: u.name,
-      avatar_url: u.avatar_url,
-      streak_count: u.streak_count,
-      weekly_score: u.weekly_score,
-      attempts_this_week: u.attempts_this_week,
-      avg_accuracy: u.avg_accuracy,
-    }));
-
-    // Filter out mock users if their ID matches a live user (unlikely, but safe)
-    const liveIds = new Set(liveEntries.map(e => e.id));
-    const combined = [...liveEntries, ...mockEntries.filter(m => !liveIds.has(m.id))];
-
-    return combined.sort((a, b) => Number(b.weekly_score) - Number(a.weekly_score)).slice(0, 50);
+    return liveEntries.sort((a, b) => Number(b.weekly_score) - Number(a.weekly_score)).slice(0, 50);
   },
 
   getTodayPercentile: async (score: number): Promise<number> => {
