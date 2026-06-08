@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, FileText, CheckCircle2, AlertCircle, Sparkles, Send } from 'lucide-react';
+import { Lock, FileText, CheckCircle2, AlertCircle, Sparkles, Send, Calendar, List, Clock, CheckCircle } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function AdminPortal() {
@@ -14,6 +14,32 @@ export default function AdminPortal() {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
   const [isCustomTopic, setIsCustomTopic] = useState(false);
+  const [passagesList, setPassagesList] = useState<any[]>([]);
+  const [loadingPassages, setLoadingPassages] = useState(false);
+
+  const fetchPassages = async () => {
+    if (!sessionToken) return;
+    setLoadingPassages(true);
+    try {
+      const res = await fetch('/api/admin/passages', {
+        headers: { 'Authorization': `Bearer ${sessionToken}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPassagesList(data.data || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch passages', err);
+    } finally {
+      setLoadingPassages(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isAdmin && sessionToken) {
+      fetchPassages();
+    }
+  }, [isAdmin, sessionToken]);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -87,6 +113,7 @@ export default function AdminPortal() {
       // Clear forms
       setPassage({ ...passage, title: '', content: '' });
       setQuestions(Array(5).fill({ ...emptyQuestion }));
+      fetchPassages(); // Refresh the list
     } catch (err: any) {
       setStatus({ type: 'error', message: err.message });
     } finally {
@@ -171,8 +198,8 @@ export default function AdminPortal() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">Publish RC Passage</h1>
-            <p className="font-mono text-xs text-gray-500 mt-2">Publish an RC manually, or use the AI Autopilot.</p>
+            <h1 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">Manage RC Passages</h1>
+            <p className="font-mono text-xs text-gray-500 mt-2">Generate, schedule, or view previously saved RC passages.</p>
           </div>
           
           <button 
@@ -353,13 +380,79 @@ export default function AdminPortal() {
             disabled={publishing || !passage.title || !passage.content}
             className={`px-8 py-4 rounded-xl font-bold text-sm tracking-wide transition-all flex items-center gap-2 ${
               publishing || !passage.title || !passage.content
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-500 cursor-not-allowed'
                 : 'bg-[#1A1A18] hover:bg-black dark:bg-[#FAFAF9] dark:hover:bg-white text-white dark:text-black shadow-lg hover:shadow-xl'
             }`}
           >
-            {publishing ? 'Publishing to Database...' : 'PUBLISH PASSAGE SECURELY'}
+            {publishing ? 'Saving...' : 'SAVE & SCHEDULE PASSAGE'}
             <Send className="w-4 h-4" />
           </button>
+        </div>
+
+        {/* Passages List */}
+        <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
+          <div className="flex items-center justify-between mb-6 border-b border-[#E5E5E3] dark:border-[#27272A] pb-4">
+            <h2 className="font-mono font-bold text-xs text-gray-500 flex items-center gap-2">
+              <List className="w-4 h-4" />
+              SCHEDULED & PREVIOUS PASSAGES
+            </h2>
+            <button onClick={fetchPassages} className="text-xs font-semibold text-indigo-500 hover:text-indigo-600">
+              Refresh
+            </button>
+          </div>
+          
+          {loadingPassages ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="w-6 h-6 rounded-full border-2 border-gray-200 border-t-[#4F46E5] animate-spin" />
+            </div>
+          ) : passagesList.length === 0 ? (
+            <div className="text-center py-12 text-sm text-gray-500 font-medium">
+              No passages found in the database.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs font-mono text-gray-500 uppercase bg-[#FAFAF9] dark:bg-[#18181B] border-b border-[#E5E5E3] dark:border-[#27272A]">
+                  <tr>
+                    <th className="px-4 py-3">Publish Date</th>
+                    <th className="px-4 py-3">Title</th>
+                    <th className="px-4 py-3">Topic</th>
+                    <th className="px-4 py-3">Difficulty</th>
+                    <th className="px-4 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {passagesList.map((p) => {
+                    const isPublished = new Date(p.published_date) <= new Date();
+                    return (
+                      <tr key={p.id} className="border-b border-[#E5E5E3] dark:border-[#27272A] hover:bg-[#FAFAF9] dark:hover:bg-[#18181B]/50 transition-colors">
+                        <td className="px-4 py-3 font-mono font-medium whitespace-nowrap">{p.published_date}</td>
+                        <td className="px-4 py-3 font-medium text-[#1A1A18] dark:text-[#FAFAF9] max-w-xs truncate">{p.title}</td>
+                        <td className="px-4 py-3 capitalize">{p.topic}</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                            p.difficulty === 1 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                            p.difficulty === 2 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                            'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                          }`}>
+                            {p.difficulty === 1 ? 'Moderate' : p.difficulty === 2 ? 'Hard' : 'V. Hard'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`flex items-center gap-1.5 font-semibold text-xs ${
+                            isPublished ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'
+                          }`}>
+                            {isPublished ? <CheckCircle className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+                            {isPublished ? 'Published' : 'Scheduled'}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
       </div>
