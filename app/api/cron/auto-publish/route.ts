@@ -7,7 +7,13 @@ export const maxDuration = 60; // Allow more time for AI generation
 export async function GET(req: Request) {
   // 1. Secure the endpoint so only your cron service (like Vercel Cron) can trigger it
   const authHeader = req.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const { searchParams } = new URL(req.url);
+  const querySecret = searchParams.get('secret');
+
+  const hasValidHeader = process.env.CRON_SECRET && authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const hasValidQuery = process.env.CRON_SECRET && querySecret === process.env.CRON_SECRET;
+
+  if (!hasValidHeader && !hasValidQuery) {
     return NextResponse.json({ error: 'Unauthorized Cron Request' }, { status: 401 });
   }
 
