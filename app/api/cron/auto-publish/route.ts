@@ -18,10 +18,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Determine the base URL for internal API calls
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000';
+    // Determine the base URL dynamically from the request to ensure absolute correctness
+    const baseUrl = new URL(req.url).origin;
     
     const passcode = process.env.ADMIN_PASSCODE || 'dailycat2026';
 
@@ -35,11 +33,17 @@ export async function GET(req: Request) {
     });
     
     if (!generateRes.ok) {
-      const err = await generateRes.json();
-      throw new Error(`AI Generation failed: ${err.error}`);
+      const responseText = await generateRes.text();
+      let errMessage = responseText;
+      try {
+        const errObj = JSON.parse(responseText);
+        errMessage = errObj.error || responseText;
+      } catch (e) {}
+      throw new Error(`AI Generation failed (${generateRes.status}): ${errMessage}`);
     }
     
-    const { data: { passage, questions } } = await generateRes.json();
+    const generateJson = await generateRes.json();
+    const { data: { passage, questions } } = generateJson;
     
     console.log("CRON: AI generated passage successfully. Attempting to publish...");
 
@@ -54,8 +58,13 @@ export async function GET(req: Request) {
     });
     
     if (!publishRes.ok) {
-      const err = await publishRes.json();
-      throw new Error(`Database Publish failed: ${err.error}`);
+      const responseText = await publishRes.text();
+      let errMessage = responseText;
+      try {
+        const errObj = JSON.parse(responseText);
+        errMessage = errObj.error || responseText;
+      } catch (e) {}
+      throw new Error(`Database Publish failed (${publishRes.status}): ${errMessage}`);
     }
     
     console.log("CRON: Success! Daily RC automated.");
