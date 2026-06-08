@@ -6,6 +6,7 @@ import { Trophy, Calendar, Sparkles, Clock } from 'lucide-react';
 import { getMockStorage, mockDb } from '../../lib/supabase';
 import { LeaderboardEntry } from '../../types';
 import LeaderboardTable from '../../components/LeaderboardTable';
+import CATCountdown from '../../components/CATCountdown';
 
 export default function LeaderboardPage() {
   const router = useRouter();
@@ -80,12 +81,15 @@ export default function LeaderboardPage() {
           </p>
         </div>
 
-        {/* Reset time label */}
-        <div className="flex items-center gap-2 border border-[#E5E5E3] dark:border-[#27272A] px-3.5 py-2 rounded-md bg-white dark:bg-[#18181B] font-mono text-xs select-none">
-          <Clock className="w-4 h-4 text-gray-400" />
-          <div className="text-left">
-            <p className="text-[9px] text-gray-400 uppercase font-semibold">Weekly Reset In</p>
-            <p className="font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{timeLeft}</p>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <CATCountdown />
+          {/* Reset time label */}
+          <div className="flex items-center gap-2 border border-[#E5E5E3] dark:border-[#27272A] px-3.5 py-2 rounded-md bg-white dark:bg-[#18181B] font-mono text-xs select-none">
+            <Clock className="w-4 h-4 text-gray-400" />
+            <div className="text-left">
+              <p className="text-[9px] text-gray-400 uppercase font-semibold">Weekly Reset In</p>
+              <p className="font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{timeLeft}</p>
+            </div>
           </div>
         </div>
       </div>

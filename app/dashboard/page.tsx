@@ -23,6 +23,7 @@ import { Profile, Attempt, Passage } from '../../types';
 import StreakWidget from '../../components/StreakWidget';
 import ScoreChart from '../../components/ScoreChart';
 import PremiumModal from '../../components/PremiumModal';
+import CATCountdown from '../../components/CATCountdown';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -272,7 +273,9 @@ export default function Dashboard() {
             Keep your streak alive. Resolve daily RCs to rank up.
           </p>
         </div>
-
+        <div className="flex items-center gap-3">
+          <CATCountdown />
+        </div>
       </div>
 
       {/* Main Grid Layout */}
