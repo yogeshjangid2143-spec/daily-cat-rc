@@ -432,40 +432,40 @@ export const mockDb = {
     
     if (isSupabaseConfigured && supabase) {
       try {
-        if (period === 'weekly') {
-          // Use the exact database view for weekly to ensure 100% accuracy
-          const { data, error } = await supabase.from('weekly_leaderboard').select('*').limit(50);
-          if (!error && data) {
-            liveEntries = data as LeaderboardEntry[];
-          } else if (error) {
-            console.error("Weekly leaderboard view error:", error);
-          }
-        } else {
-          // Manual calculation for All-Time since the view doesn't exist
-          const { data: profiles } = await supabase.from('profiles').select('*');
-          const { data: attempts } = await supabase.from('attempts').select('*');
-          
-          if (profiles && attempts) {
-            liveEntries = profiles.map(p => {
-              const userAttempts = attempts.filter(a => a.user_id === p.id);
+        // Manual calculation for both tabs to ensure 100% accuracy and avoid Monday resets hiding users
+        const { data: profiles } = await supabase.from('profiles').select('*');
+        const { data: attempts } = await supabase.from('attempts').select('*');
+        
+        if (profiles && attempts) {
+          liveEntries = profiles.map(p => {
+            const userAttempts = attempts.filter(a => a.user_id === p.id);
+            
+            // Filter attempts based on tab
+            const filteredAttempts = userAttempts.filter(a => {
+              if (period === 'alltime') return true;
               
-              const totalScore = userAttempts.reduce((sum, a) => sum + Number(a.score), 0);
-              const totalQuestions = userAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
-              const avgAccuracy = totalQuestions > 0 
-                ? Math.round((totalScore / totalQuestions) * 1000) / 10 
-                : 0;
+              // For weekly, use a rolling 7-day window so users don't disappear on Monday
+              const attemptDate = new Date(a.completed_at).getTime();
+              const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+              return attemptDate >= sevenDaysAgo;
+            });
+            
+            const totalScore = filteredAttempts.reduce((sum, a) => sum + Number(a.score), 0);
+            const totalQuestions = filteredAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
+            const avgAccuracy = totalQuestions > 0 
+              ? Math.round((totalScore / totalQuestions) * 1000) / 10 
+              : 0;
 
-              return {
-                id: p.id,
-                name: p.name || 'Anonymous User',
-                avatar_url: p.avatar_url,
-                streak_count: p.streak_count,
-                weekly_score: totalScore,
-                attempts_this_week: userAttempts.length,
-                avg_accuracy: avgAccuracy,
-              };
-            }).filter(e => e.attempts_this_week > 0);
-          }
+            return {
+              id: p.id,
+              name: p.name || 'Anonymous User',
+              avatar_url: p.avatar_url,
+              streak_count: p.streak_count,
+              weekly_score: totalScore,
+              attempts_this_week: filteredAttempts.length,
+              avg_accuracy: avgAccuracy,
+            };
+          }).filter(e => period === 'alltime' ? e.attempts_this_week >= 0 : e.attempts_this_week > 0);
         }
       } catch (err) {
         console.error("Leaderboard fetch error:", err);
