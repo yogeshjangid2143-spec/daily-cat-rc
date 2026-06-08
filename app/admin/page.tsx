@@ -20,6 +20,45 @@ export default function AdminPortal() {
   const [editingDateId, setEditingDateId] = useState<string | null>(null);
   const [editingDateValue, setEditingDateValue] = useState<string>('');
   const [activeView, setActiveView] = useState<'list' | 'form'>('list');
+  const [timeMachineOffset, setTimeMachineOffset] = useState<number>(0);
+  const [timeMachineDate, setTimeMachineDate] = useState<string>('');
+
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const match = document.cookie.match(new RegExp('(^| )time_machine_date=([^;]+)'));
+      if (match && match[2]) {
+        setTimeMachineDate(match[2]);
+        const d1 = new Date(match[2]);
+        const d2 = new Date(getISTDateString());
+        const diffDays = Math.round((d1.getTime() - d2.getTime()) / (1000 * 3600 * 24));
+        setTimeMachineOffset(diffDays || 0);
+      }
+    }
+  }, []);
+
+  const handleTimeMachineChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const offset = parseInt(e.target.value);
+    setTimeMachineOffset(offset);
+    
+    if (offset === 0) {
+      document.cookie = "time_machine_date=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      setTimeMachineDate('');
+      fetchPassages();
+    } else {
+      const d = new Date();
+      d.setDate(d.getDate() + offset);
+      const formatter = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' });
+      const parts = formatter.formatToParts(d);
+      const year = parts.find(p => p.type === 'year')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const day = parts.find(p => p.type === 'day')?.value;
+      const dateStr = `${year}-${month}-${day}`;
+      
+      document.cookie = `time_machine_date=${dateStr}; path=/;`;
+      setTimeMachineDate(dateStr);
+      fetchPassages();
+    }
+  };
 
   const handleDeletePassage = async (id: string) => {
     if (!confirm('Are you sure you want to delete this passage? This will also delete all associated questions and attempts.')) return;
@@ -455,6 +494,38 @@ export default function AdminPortal() {
 
         {/* Passages List */}
         {activeView === 'list' && (
+          <div className="flex flex-col gap-8">
+            {/* Time Machine UI */}
+            <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 dark:from-indigo-900/20 dark:to-purple-900/20 p-6 rounded-xl border border-indigo-200 dark:border-indigo-800/50">
+              <div className="flex flex-col gap-4">
+                <h2 className="font-mono font-bold text-xs text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  DEVELOPER TIME MACHINE
+                </h2>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-mono font-semibold w-20 text-right">-10 Days</span>
+                  <input 
+                    type="range" 
+                    min="-10" max="10" 
+                    value={timeMachineOffset} 
+                    onChange={handleTimeMachineChange}
+                    className="flex-1 accent-indigo-500"
+                  />
+                  <span className="text-sm font-mono font-semibold w-20">+10 Days</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-semibold">
+                    Simulated Date: <span className="font-mono text-indigo-600 dark:text-indigo-400">{timeMachineDate || 'Real Time (Today)'}</span>
+                  </div>
+                  {timeMachineOffset !== 0 && (
+                    <button onClick={() => handleTimeMachineChange({ target: { value: 0 } } as any)} className="text-xs font-semibold px-3 py-1.5 rounded-md bg-indigo-100 text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 transition-colors">
+                      Reset to Real Time
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
         <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
           <div className="flex items-center justify-between mb-6 border-b border-[#E5E5E3] dark:border-[#27272A] pb-4">
             <h2 className="font-mono font-bold text-xs text-gray-500 flex items-center gap-2">
@@ -542,6 +613,7 @@ export default function AdminPortal() {
               </table>
             </div>
           )}
+        </div>
         </div>
         )}
 
