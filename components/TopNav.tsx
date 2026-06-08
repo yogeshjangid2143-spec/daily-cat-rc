@@ -17,6 +17,17 @@ export default function TopNav() {
   const [darkMode, setDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [showSignedOutToast, setShowSignedOutToast] = useState(false);
+
+  useEffect(() => {
+    if (showSignedOutToast) {
+      const timer = setTimeout(() => {
+        setShowSignedOutToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSignedOutToast]);
 
   useEffect(() => {
     setMounted(true);
@@ -63,6 +74,16 @@ export default function TopNav() {
 
     loadUser();
 
+    // Check search params for sign out action
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('action') === 'signedout') {
+        setShowSignedOutToast(true);
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+
     // Listen for custom events or storage updates
     window.addEventListener('storage', loadUser);
     window.addEventListener('user-state-change', loadUser);
@@ -85,13 +106,18 @@ export default function TopNav() {
   };
 
   const handleLogout = async () => {
-    if (isSupabaseConfigured && supabase) {
-      await supabase.auth.signOut();
+    setLoggingOut(true);
+    try {
+      if (isSupabaseConfigured && supabase) {
+        await supabase.auth.signOut();
+      }
+    } catch (e) {
+      console.error(e);
     }
     setMockStorage({ currentUser: null });
     setUser(null);
     window.dispatchEvent(new Event('user-state-change'));
-    router.push('/');
+    router.push('/?action=signedout');
   };
 
   const isActive = (path: string) => pathname === path;
@@ -265,6 +291,39 @@ export default function TopNav() {
       </div>
     </nav>
     <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
+
+    {/* Fullscreen Sign-out Overlay */}
+    {loggingOut && (
+      <div className="fixed inset-0 bg-[#FAFAF9]/60 dark:bg-[#18181B]/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-gray-200 border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
+        <span className="font-mono text-xs text-gray-500">Signing out securely...</span>
+      </div>
+    )}
+
+    {/* Floating Success Toast */}
+    {showSignedOutToast && (
+      <>
+        <style>{`
+          @keyframes slideUpFade {
+            from {
+              opacity: 0;
+              transform: translateY(1rem);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .animate-toast {
+            animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          }
+        `}</style>
+        <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 bg-white dark:bg-[#1C1C1A] border border-[#E5E5E3] dark:border-[#27272A] rounded-lg shadow-xl text-xs font-mono text-gray-700 dark:text-gray-300 animate-toast">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Signed out successfully</span>
+        </div>
+      </>
+    )}
     </>
   );
 }
