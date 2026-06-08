@@ -18,6 +18,7 @@ export default function AdminPortal() {
   const [loadingPassages, setLoadingPassages] = useState(false);
   const [editingDateId, setEditingDateId] = useState<string | null>(null);
   const [editingDateValue, setEditingDateValue] = useState<string>('');
+  const [activeView, setActiveView] = useState<'list' | 'form'>('list');
 
   const handleDeletePassage = async (id: string) => {
     if (!confirm('Are you sure you want to delete this passage? This will also delete all associated questions and attempts.')) return;
@@ -149,6 +150,7 @@ export default function AdminPortal() {
       setPassage({ ...passage, title: '', content: '' });
       setQuestions(Array(5).fill({ ...emptyQuestion }));
       fetchPassages(); // Refresh the list
+      setActiveView('list');
     } catch (err: any) {
       setStatus({ type: 'error', message: err.message });
     } finally {
@@ -233,36 +235,60 @@ export default function AdminPortal() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">Manage RC Passages</h1>
-            <p className="font-mono text-xs text-gray-500 mt-2">Generate, schedule, or view previously saved RC passages.</p>
+            <h1 className="font-serif text-3xl font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+              {activeView === 'list' ? 'Manage RC Passages' : 'Create RC Passage'}
+            </h1>
+            <p className="font-mono text-xs text-gray-500 mt-2">
+              {activeView === 'list' ? 'Generate, schedule, or view previously saved RC passages.' : 'Publish an RC manually, or use the AI Autopilot.'}
+            </p>
           </div>
           
-          <button 
-            onClick={handleGenerateAI}
-            disabled={generatingAI}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm shadow-md transition-all ${
-              generatingAI ? 'bg-indigo-100/50 text-indigo-400 dark:bg-indigo-900/30 dark:text-indigo-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
-            }`}
-          >
-            <Sparkles className={`w-4 h-4 ${generatingAI ? 'animate-pulse' : ''}`} />
-            <span className="min-w-[120px] text-left">
-              {generatingAI 
-                ? (timeLeft !== null ? `Generating... (~${timeLeft}s)` : 'Generating...')
-                : 'Generate with AI'}
-            </span>
-          </button>
+          {activeView === 'list' ? (
+            <button 
+              onClick={() => setActiveView('form')}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-[#1A1A18] text-white dark:bg-white dark:text-black shadow-md hover:shadow-lg transition-all"
+            >
+              <FileText className="w-4 h-4" />
+              Create New Passage
+            </button>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setActiveView('list')}
+                className="px-5 py-2.5 rounded-lg font-semibold text-sm bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all"
+              >
+                Back to List
+              </button>
+              <button 
+                onClick={handleGenerateAI}
+                disabled={generatingAI}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm shadow-md transition-all ${
+                  generatingAI ? 'bg-indigo-100/50 text-indigo-400 dark:bg-indigo-900/30 dark:text-indigo-400 cursor-not-allowed' : 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
+                }`}
+              >
+                <Sparkles className={`w-4 h-4 ${generatingAI ? 'animate-pulse' : ''}`} />
+                <span className="min-w-[120px] text-left">
+                  {generatingAI 
+                    ? (timeLeft !== null ? `Generating... (~${timeLeft}s)` : 'Generating...')
+                    : 'Generate with AI'}
+                </span>
+              </button>
+            </div>
+          )}
         </div>
 
-        {status.type && (
-          <div className={`p-4 rounded-lg flex items-center gap-3 text-sm font-semibold ${
-            status.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'
-          }`}>
-            {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-            {status.message}
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {activeView === 'form' && (
+          <>
+            {status.type && (
+              <div className={`p-4 rounded-lg flex items-center gap-3 text-sm font-semibold ${
+                status.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'
+              }`}>
+                {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                {status.message}
+              </div>
+            )}
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Passage Settings */}
           <div className="lg:col-span-4 flex flex-col gap-6">
@@ -423,8 +449,11 @@ export default function AdminPortal() {
             <Send className="w-4 h-4" />
           </button>
         </div>
+        </>
+        )}
 
         {/* Passages List */}
+        {activeView === 'list' && (
         <div className="bg-white dark:bg-[#1A1A18] p-6 rounded-xl border border-[#E5E5E3] dark:border-[#27272A]">
           <div className="flex items-center justify-between mb-6 border-b border-[#E5E5E3] dark:border-[#27272A] pb-4">
             <h2 className="font-mono font-bold text-xs text-gray-500 flex items-center gap-2">
@@ -513,6 +542,7 @@ export default function AdminPortal() {
             </div>
           )}
         </div>
+        )}
 
       </div>
     </div>
