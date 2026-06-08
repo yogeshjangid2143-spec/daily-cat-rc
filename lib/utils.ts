@@ -38,17 +38,9 @@ export function getDifficultyColor(difficulty: number): string {
 }
 
 export function getISTDateString(): string {
-  // Developer override: Simulate a specific date via env var
+  // Developer override: Simulate a specific date
   if (process.env.NEXT_PUBLIC_SIMULATE_DATE) {
     return process.env.NEXT_PUBLIC_SIMULATE_DATE.replace(/['"]/g, '');
-  }
-
-  // Developer override: Simulate a specific date via Time Machine cookie (Client-side)
-  if (typeof document !== 'undefined') {
-    const match = document.cookie.match(new RegExp('(^| )time_machine_date=([^;]+)'));
-    if (match && match[2]) {
-      return match[2];
-    }
   }
 
   const formatter = new Intl.DateTimeFormat('en-US', {
