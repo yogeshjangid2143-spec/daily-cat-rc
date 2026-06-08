@@ -447,11 +447,17 @@ export const mockDb = {
       const filteredAttempts = userAttempts.filter(a => {
         if (period === 'alltime') return true;
         const date = new Date(a.completed_at);
-        const startOfWeek = new Date();
-        const day = startOfWeek.getDay();
-        const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
-        startOfWeek.setDate(diff);
-        startOfWeek.setHours(0,0,0,0);
+        
+        const nowUTC = new Date();
+        const istTime = new Date(nowUTC.getTime() + 5.5 * 60 * 60 * 1000);
+        const day = istTime.getUTCDay();
+        const daysToSubtract = day === 0 ? 6 : day - 1;
+        
+        const mondayIST = new Date(istTime);
+        mondayIST.setUTCDate(istTime.getUTCDate() - daysToSubtract);
+        mondayIST.setUTCHours(0, 0, 0, 0);
+        
+        const startOfWeek = new Date(mondayIST.getTime() - 5.5 * 60 * 60 * 1000);
         return date >= startOfWeek;
       });
 

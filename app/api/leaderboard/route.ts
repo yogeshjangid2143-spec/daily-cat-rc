@@ -8,21 +8,19 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 export const dynamic = 'force-dynamic';
 
 function getMondayISTInUTC(): Date {
-  const now = new Date();
-  // Convert current UTC time to Indian Standard Time (UTC + 5:30)
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  const istNow = new Date(utc + (3600000 * 5.5));
+  const nowUTC = new Date();
+  // Shift by 5.5 hours to represent IST time in UTC methods
+  const istTime = new Date(nowUTC.getTime() + 5.5 * 60 * 60 * 1000);
   
-  const day = istNow.getDay();
-  // Monday is 1, Sunday is 0.
-  const diff = istNow.getDate() - day + (day === 0 ? -6 : 1);
+  const day = istTime.getUTCDay(); // 0 = Sunday, 1 = Monday, etc.
+  const daysToSubtract = day === 0 ? 6 : day - 1;
   
-  const mondayIST = new Date(istNow);
-  mondayIST.setDate(diff);
-  mondayIST.setHours(0, 0, 0, 0); // Monday 00:00:00 IST
+  const mondayIST = new Date(istTime);
+  mondayIST.setUTCDate(istTime.getUTCDate() - daysToSubtract);
+  mondayIST.setUTCHours(0, 0, 0, 0); // Monday 00:00:00 IST
   
-  // Convert back to UTC Date object
-  return new Date(mondayIST.getTime() - (3600000 * 5.5));
+  // Convert back to UTC timezone
+  return new Date(mondayIST.getTime() - 5.5 * 60 * 60 * 1000);
 }
 
 export async function GET(req: NextRequest) {
