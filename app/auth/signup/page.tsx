@@ -81,7 +81,8 @@ export default function SignupPage() {
           options: {
             data: {
               name,
-            }
+            },
+            emailRedirectTo: `${window.location.origin}/dashboard`
           }
         });
         if (err) throw err;
