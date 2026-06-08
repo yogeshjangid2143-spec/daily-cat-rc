@@ -40,7 +40,7 @@ export function getDifficultyColor(difficulty: number): string {
 export function getISTDateString(): string {
   // Developer override: Simulate a specific date
   if (process.env.NEXT_PUBLIC_SIMULATE_DATE) {
-    return process.env.NEXT_PUBLIC_SIMULATE_DATE;
+    return process.env.NEXT_PUBLIC_SIMULATE_DATE.replace(/['"]/g, '');
   }
 
   const formatter = new Intl.DateTimeFormat('en-US', {
