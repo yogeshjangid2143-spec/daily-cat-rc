@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, FileText, CheckCircle2, AlertCircle, Sparkles, Send, Calendar, List, Clock, CheckCircle } from 'lucide-react';
+import { Lock, FileText, CheckCircle2, AlertCircle, Sparkles, Send, Calendar, List, Clock, CheckCircle, Trash2, Edit3, X, Check } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function AdminPortal() {
@@ -16,6 +16,41 @@ export default function AdminPortal() {
   const [isCustomTopic, setIsCustomTopic] = useState(false);
   const [passagesList, setPassagesList] = useState<any[]>([]);
   const [loadingPassages, setLoadingPassages] = useState(false);
+  const [editingDateId, setEditingDateId] = useState<string | null>(null);
+  const [editingDateValue, setEditingDateValue] = useState<string>('');
+
+  const handleDeletePassage = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this passage? This will also delete all associated questions and attempts.')) return;
+    try {
+      const res = await fetch(`/api/admin/passages/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${sessionToken}` }
+      });
+      if (!res.ok) throw new Error('Failed to delete');
+      fetchPassages();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const handleUpdateDate = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/passages/${id}`, {
+        method: 'PATCH',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${sessionToken}`
+        },
+        body: JSON.stringify({ published_date: editingDateValue })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update date');
+      setEditingDateId(null);
+      fetchPassages();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
 
   const fetchPassages = async () => {
     if (!sessionToken) return;
@@ -419,6 +454,7 @@ export default function AdminPortal() {
                     <th className="px-4 py-3">Topic</th>
                     <th className="px-4 py-3">Difficulty</th>
                     <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -426,8 +462,26 @@ export default function AdminPortal() {
                     const isPublished = new Date(p.published_date) <= new Date();
                     return (
                       <tr key={p.id} className="border-b border-[#E5E5E3] dark:border-[#27272A] hover:bg-[#FAFAF9] dark:hover:bg-[#18181B]/50 transition-colors">
-                        <td className="px-4 py-3 font-mono font-medium whitespace-nowrap">{p.published_date}</td>
-                        <td className="px-4 py-3 font-medium text-[#1A1A18] dark:text-[#FAFAF9] max-w-xs truncate">{p.title}</td>
+                        <td className="px-4 py-3 font-mono font-medium whitespace-nowrap">
+                          {editingDateId === p.id ? (
+                            <div className="flex items-center gap-2">
+                              <input 
+                                type="date" 
+                                value={editingDateValue} 
+                                onChange={e => setEditingDateValue(e.target.value)}
+                                className="px-2 py-1 border border-[#E5E5E3] dark:border-[#27272A] rounded bg-white dark:bg-black text-xs outline-none"
+                              />
+                              <button onClick={() => handleUpdateDate(p.id)} className="text-green-500 hover:text-green-600 bg-green-50 dark:bg-green-900/20 p-1 rounded"><Check className="w-3.5 h-3.5" /></button>
+                              <button onClick={() => setEditingDateId(null)} className="text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/20 p-1 rounded"><X className="w-3.5 h-3.5" /></button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 group cursor-pointer" onClick={() => { setEditingDateId(p.id); setEditingDateValue(p.published_date); }}>
+                              {p.published_date}
+                              <Edit3 className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600 group-hover:text-indigo-500 transition-colors" />
+                            </div>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 font-medium text-[#1A1A18] dark:text-[#FAFAF9] max-w-xs truncate" title={p.title}>{p.title}</td>
                         <td className="px-4 py-3 capitalize">{p.topic}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
@@ -445,6 +499,11 @@ export default function AdminPortal() {
                             {isPublished ? <CheckCircle className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
                             {isPublished ? 'Published' : 'Scheduled'}
                           </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button onClick={() => handleDeletePassage(p.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1" title="Delete Passage">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </td>
                       </tr>
                     );
