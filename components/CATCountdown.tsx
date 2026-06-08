@@ -39,14 +39,14 @@ export default function CATCountdown({ size = 'sm' }: CATCountdownProps) {
 
   return (
     <div 
-      className={`flex items-center select-none font-mono border border-red-200 dark:border-red-950/30 bg-red-50/30 dark:bg-red-950/5 
+      className={`flex items-center select-none font-mono border border-red-200 dark:border-red-950/30 bg-red-50/30 dark:bg-red-950/5 whitespace-nowrap
         ${isLg 
-          ? 'gap-4 px-5.5 py-3 rounded-lg text-sm' 
-          : 'gap-2 px-3.5 py-2 rounded-md text-xs'}`}
+          ? 'gap-4 px-6 py-3.5 rounded-lg text-sm' 
+          : 'gap-3 px-4 py-2.5 rounded-md text-xs'}`}
     >
       <Calendar 
-        className={`text-red-500 dark:text-red-400 
-          ${isLg ? 'w-6 h-6' : 'w-4 h-4'}`} 
+        className={`text-red-500 dark:text-red-400 shrink-0
+          ${isLg ? 'w-6 h-6' : 'w-5 h-5'}`} 
       />
       <div className="text-left">
         <p 
@@ -57,7 +57,7 @@ export default function CATCountdown({ size = 'sm' }: CATCountdownProps) {
         </p>
         <p 
           className={`font-bold text-[#1A1A18] dark:text-[#FAFAF9] 
-            ${isLg ? 'text-lg mt-0.5' : ''}`}
+            ${isLg ? 'text-xl mt-0.5' : 'text-xs'}`}
         >
           {timeLeft}
         </p>
