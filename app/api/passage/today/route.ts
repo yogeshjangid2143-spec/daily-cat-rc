@@ -25,11 +25,12 @@ export async function GET() {
       .maybeSingle();
 
     if (!passage) {
-      // Fallback to latest
+      // Fallback to latest available passage (past or today)
       const { data: latestPassages } = await supabaseAdmin
         .from('passages')
         .select('*')
         .eq('is_active', true)
+        .lte('published_date', todayStr)
         .order('published_date', { ascending: false })
         .limit(1);
       if (latestPassages && latestPassages.length > 0) {

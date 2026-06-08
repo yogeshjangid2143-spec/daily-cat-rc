@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { Profile, Passage, Question, Attempt, LeaderboardEntry } from '../types';
+import { getISTDateString } from './utils';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -534,6 +535,7 @@ export const mockDb = {
         .from('passages')
         .select('*')
         .eq('is_active', true)
+        .lte('published_date', getISTDateString())
         .order('published_date', { ascending: false });
       if (error || !data) return [];
       return data as Passage[];
