@@ -431,21 +431,46 @@ export const mockDb = {
     let liveEntries: LeaderboardEntry[] = [];
     
     if (isSupabaseConfigured && supabase) {
-      const viewName = period === 'alltime' ? 'alltime_leaderboard' : 'weekly_leaderboard';
-      const { data, error } = await supabase
-        .from(viewName)
-        .select('*')
-        .limit(50);
-      
-      if (error) {
-        if (period === 'alltime') {
-           const { data: fallbackData } = await supabase.from('weekly_leaderboard').select('*').limit(50);
-           liveEntries = fallbackData as LeaderboardEntry[] || [];
-        } else {
-           console.error("Leaderboard fetch error:", error);
+      try {
+        // Try to compute it manually from profiles and attempts to guarantee all live users are found,
+        // and to support "alltime" since the alltime_leaderboard view might not exist.
+        const { data: profiles } = await supabase.from('profiles').select('*');
+        const { data: attempts } = await supabase.from('attempts').select('*');
+        
+        if (profiles && attempts) {
+          liveEntries = profiles.map(p => {
+            const userAttempts = attempts.filter(a => a.user_id === p.id);
+            const filteredAttempts = userAttempts.filter(a => {
+              if (period === 'alltime') return true;
+              const date = new Date(a.completed_at);
+              // Calculate start of week (Monday)
+              const startOfWeek = new Date();
+              const day = startOfWeek.getDay();
+              const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+              startOfWeek.setDate(diff);
+              startOfWeek.setHours(0, 0, 0, 0);
+              return date >= startOfWeek;
+            });
+
+            const totalScore = filteredAttempts.reduce((sum, a) => sum + Number(a.score), 0);
+            const totalQuestions = filteredAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
+            const avgAccuracy = totalQuestions > 0 
+              ? Math.round((totalScore / totalQuestions) * 1000) / 10 
+              : 0;
+
+            return {
+              id: p.id,
+              name: p.name || 'Anonymous User',
+              avatar_url: p.avatar_url,
+              streak_count: p.streak_count,
+              weekly_score: totalScore,
+              attempts_this_week: filteredAttempts.length,
+              avg_accuracy: avgAccuracy,
+            };
+          }).filter(e => period === 'alltime' || e.attempts_this_week > 0);
         }
-      } else if (data) {
-        liveEntries = data as LeaderboardEntry[];
+      } catch (err) {
+        console.error("Leaderboard manual fetch error:", err);
       }
     }
 
@@ -464,7 +489,7 @@ export const mockDb = {
     const liveIds = new Set(liveEntries.map(e => e.id));
     const combined = [...liveEntries, ...mockEntries.filter(m => !liveIds.has(m.id))];
 
-    return combined.sort((a, b) => b.weekly_score - a.weekly_score).slice(0, 50);
+    return combined.sort((a, b) => Number(b.weekly_score) - Number(a.weekly_score)).slice(0, 50);
   },
 
   getTodayPercentile: async (score: number): Promise<number> => {
