@@ -265,7 +265,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                     <span className="font-serif text-2xl font-bold tracking-tight text-[#1A1A18]">
                       dailycat<span className="text-[#4F46E5]">rc</span>
                     </span>
-                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">dailycatrc.com</p>
+                    <p className="text-[10px] text-gray-400 font-mono mt-0.5">dailycatrc.online</p>
                   </div>
                   <span className="font-mono text-[10px] font-semibold text-gray-500 uppercase tracking-widest bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
                     DAILY PRACTICE

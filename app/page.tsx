@@ -172,7 +172,7 @@ export default function LandingPage() {
 
       {/* Footer copyright */}
       <div className="mt-24 w-full border-t border-[#E5E5E3] dark:border-[#27272A] pt-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-gray-400">
-        <span>&copy; {new Date().getFullYear()} dailycatrc.com. All rights reserved.</span>
+        <span>&copy; {new Date().getFullYear()} dailycatrc.online. All rights reserved.</span>
         <div className="flex gap-4 mt-2 md:mt-0">
           <span className="hover:text-gray-600 cursor-pointer">Terms</span>
           <span className="hover:text-gray-600 cursor-pointer">Privacy</span>

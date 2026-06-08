@@ -44,7 +44,7 @@ export default function ProfilePage() {
       let profile = currentUser;
       let userAttempts: Attempt[] = [];
 
-      let userEmail = `${currentUser.name?.toLowerCase().replace(/\s/g, '')}@dailycatrc.com`;
+      let userEmail = `${currentUser.name?.toLowerCase().replace(/\s/g, '')}@dailycatrc.online`;
 
       try {
         if (isSupabaseConfigured && supabase) {
