@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar } from 'lucide-react';
 
-export default function CATCountdown() {
+interface CATCountdownProps {
+  size?: 'sm' | 'lg';
+}
+
+export default function CATCountdown({ size = 'sm' }: CATCountdownProps) {
   const [timeLeft, setTimeLeft] = useState('');
 
   useEffect(() => {
@@ -31,12 +35,32 @@ export default function CATCountdown() {
     return () => clearInterval(interval);
   }, []);
 
+  const isLg = size === 'lg';
+
   return (
-    <div className="flex items-center gap-2 border border-red-200 dark:border-red-950/30 px-3.5 py-2 rounded-md bg-red-50/30 dark:bg-red-950/5 font-mono text-xs select-none">
-      <Calendar className="w-4 h-4 text-red-500 dark:text-red-400" />
+    <div 
+      className={`flex items-center select-none font-mono border border-red-200 dark:border-red-950/30 bg-red-50/30 dark:bg-red-950/5 
+        ${isLg 
+          ? 'gap-4 px-5.5 py-3 rounded-lg text-sm' 
+          : 'gap-2 px-3.5 py-2 rounded-md text-xs'}`}
+    >
+      <Calendar 
+        className={`text-red-500 dark:text-red-400 
+          ${isLg ? 'w-6 h-6' : 'w-4 h-4'}`} 
+      />
       <div className="text-left">
-        <p className="text-[9px] text-red-500 dark:text-red-400 uppercase font-bold tracking-wider">CAT 2026 Countdown</p>
-        <p className="font-bold text-[#1A1A18] dark:text-[#FAFAF9]">{timeLeft}</p>
+        <p 
+          className={`text-red-500 dark:text-red-400 uppercase font-bold tracking-wider 
+            ${isLg ? 'text-[10px]' : 'text-[9px]'}`}
+        >
+          CAT 2026 Countdown
+        </p>
+        <p 
+          className={`font-bold text-[#1A1A18] dark:text-[#FAFAF9] 
+            ${isLg ? 'text-lg mt-0.5' : ''}`}
+        >
+          {timeLeft}
+        </p>
       </div>
     </div>
   );
