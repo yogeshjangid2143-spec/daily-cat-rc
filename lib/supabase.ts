@@ -428,51 +428,51 @@ export const mockDb = {
   },
 
   getLeaderboard: async (period: 'weekly' | 'alltime' = 'weekly'): Promise<LeaderboardEntry[]> => {
-    let liveEntries: LeaderboardEntry[] = [];
-    
     if (isSupabaseConfigured && supabase) {
       try {
-        // Manual calculation for both tabs to ensure 100% accuracy and avoid Monday resets hiding users
-        const { data: profiles } = await supabase.from('profiles').select('*');
-        const { data: attempts } = await supabase.from('attempts').select('*');
-        
-        if (profiles && attempts) {
-          liveEntries = profiles.map(p => {
-            const userAttempts = attempts.filter(a => a.user_id === p.id);
-            
-            // Filter attempts based on tab
-            const filteredAttempts = userAttempts.filter(a => {
-              if (period === 'alltime') return true;
-              
-              // For weekly, use a rolling 7-day window so users don't disappear on Monday
-              const attemptDate = new Date(a.completed_at).getTime();
-              const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-              return attemptDate >= sevenDaysAgo;
-            });
-            
-            const totalScore = filteredAttempts.reduce((sum, a) => sum + Number(a.score), 0);
-            const totalQuestions = filteredAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
-            const avgAccuracy = totalQuestions > 0 
-              ? Math.round((totalScore / totalQuestions) * 1000) / 10 
-              : 0;
-
-            return {
-              id: p.id,
-              name: p.name || 'Anonymous User',
-              avatar_url: p.avatar_url,
-              streak_count: p.streak_count,
-              weekly_score: totalScore,
-              attempts_this_week: filteredAttempts.length,
-              avg_accuracy: avgAccuracy,
-            };
-          }).filter(e => period === 'alltime' ? e.attempts_this_week >= 0 : e.attempts_this_week > 0);
-        }
+        const res = await fetch(`/api/leaderboard?period=${period}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to fetch leaderboard');
+        return await res.json();
       } catch (err) {
-        console.error("Leaderboard fetch error:", err);
+        console.error("Leaderboard API fetch error:", err);
       }
     }
 
-    return liveEntries.sort((a, b) => Number(b.weekly_score) - Number(a.weekly_score)).slice(0, 50);
+    const { profiles, attempts } = getMockStorage();
+    
+    // Calculate real leaderboard for offline fallback
+    const entries: LeaderboardEntry[] = profiles.map(p => {
+      const userAttempts = attempts.filter(a => a.user_id === p.id);
+      
+      const filteredAttempts = userAttempts.filter(a => {
+        if (period === 'alltime') return true;
+        const date = new Date(a.completed_at);
+        const startOfWeek = new Date();
+        const day = startOfWeek.getDay();
+        const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0,0,0,0);
+        return date >= startOfWeek;
+      });
+
+      const totalScore = filteredAttempts.reduce((sum, a) => sum + Number(a.score), 0);
+      const totalQuestions = filteredAttempts.reduce((sum, a) => sum + Number(a.total_questions), 0);
+      const avgAccuracy = totalQuestions > 0 
+        ? Math.round((totalScore / totalQuestions) * 1000) / 10 
+        : 0;
+
+      return {
+        id: p.id,
+        name: p.name || 'Anonymous User',
+        avatar_url: p.avatar_url,
+        streak_count: p.streak_count,
+        weekly_score: totalScore,
+        attempts_this_week: filteredAttempts.length,
+        avg_accuracy: avgAccuracy,
+      };
+    }).filter(e => e.attempts_this_week > 0);
+
+    return entries.sort((a, b) => b.weekly_score - a.weekly_score);
   },
 
   getTodayPercentile: async (score: number): Promise<number> => {
