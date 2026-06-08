@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { getISTDateString } from '@/lib/utils';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -15,7 +16,7 @@ export async function GET() {
     // Create an Admin client to bypass RLS
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = getISTDateString();
     let { data: passage } = await supabaseAdmin
       .from('passages')
       .select('*')

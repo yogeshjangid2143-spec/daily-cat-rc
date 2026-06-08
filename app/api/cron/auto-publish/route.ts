@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getISTDateString } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // Allow more time for AI generation
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
     console.log("CRON: AI generated passage successfully. Attempting to publish...");
 
     // Format the date properly just in case
-    passage.published_date = new Date().toISOString().split('T')[0];
+    passage.published_date = getISTDateString();
 
     // 3. Publish directly to the Database
     const publishRes = await fetch(`${baseUrl}/api/admin/publish`, {

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CheckCircle2, Clock, BookOpen, ChevronRight, Activity } from 'lucide-react';
 import { getMockStorage, mockDb } from '@/lib/supabase';
+import { getISTDateString } from '@/lib/utils';
 import { Passage, Attempt } from '@/types';
 
 export default function HistoryArchivePage() {
@@ -71,7 +72,7 @@ export default function HistoryArchivePage() {
             const dateObj = new Date(passage.published_date);
             const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             const isAttempted = attempts.some(a => a.passage_id === passage.id);
-            const isToday = passage.published_date === new Date().toISOString().split('T')[0];
+            const isToday = passage.published_date === getISTDateString();
 
             return (
               <div 

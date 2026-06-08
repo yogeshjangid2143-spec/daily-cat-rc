@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, FileText, CheckCircle2, AlertCircle, Sparkles, Send, Calendar, List, Clock, CheckCircle, Trash2, Edit3, X, Check } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { getISTDateString } from '@/lib/utils';
 
 export default function AdminPortal() {
   const router = useRouter();
@@ -104,7 +105,7 @@ export default function AdminPortal() {
     content: '',
     difficulty: 2,
     topic: 'economics',
-    published_date: new Date().toISOString().split('T')[0]
+    published_date: getISTDateString()
   });
 
   const emptyQuestion = {
