@@ -48,6 +48,9 @@ export default function TopNav() {
 
     // Load user state
     const loadUser = async () => {
+      if (typeof window !== 'undefined' && localStorage.getItem('dailycatrc_signing_out') === 'true') {
+        return;
+      }
       let { currentUser } = getMockStorage();
       if (isSupabaseConfigured && supabase) {
         const { data: { session } } = await supabase.auth.getSession();
@@ -111,16 +114,24 @@ export default function TopNav() {
   const handleLogout = async () => {
     setLoggingOut(true);
     setSignOutSuccess(false);
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('dailycatrc_signing_out', 'true');
+    }
+
+    setMockStorage({ currentUser: null });
+    setUser(null);
+    window.dispatchEvent(new Event('user-state-change'));
+    
     try {
       if (isSupabaseConfigured && supabase) {
-        await supabase.auth.signOut();
+        supabase.auth.signOut().catch((e) => {
+          console.error("Supabase signOut error:", e);
+        });
       }
     } catch (e) {
       console.error(e);
     }
-    setMockStorage({ currentUser: null });
-    setUser(null);
-    window.dispatchEvent(new Event('user-state-change'));
     
     // Set success phase
     setSignOutSuccess(true);
@@ -129,6 +140,9 @@ export default function TopNav() {
     setTimeout(() => {
       setLoggingOut(false);
       setSignOutSuccess(false);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('dailycatrc_signing_out');
+      }
       router.push('/?action=signedout');
     }, 1500);
   };

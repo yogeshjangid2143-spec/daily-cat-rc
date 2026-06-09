@@ -46,6 +46,9 @@ export default function Dashboard() {
   useEffect(() => {
     const initData = async () => {
       try {
+        if (typeof window !== 'undefined' && localStorage.getItem('dailycatrc_signing_out') === 'true') {
+          return;
+        }
         let activeUser = getMockStorage().currentUser;
 
         // 1. Authenticate user properly via Supabase
@@ -76,11 +79,9 @@ export default function Dashboard() {
               // Note: RLS might block client-side insert if not configured perfectly, but Supabase handles basic auth.
             }
             setMockStorage({ currentUser: activeUser });
-            window.dispatchEvent(new Event('user-state-change'));
           } else {
             activeUser = null; // Enforce Supabase auth if configured
             setMockStorage({ currentUser: null });
-            window.dispatchEvent(new Event('user-state-change'));
           }
         }
 
