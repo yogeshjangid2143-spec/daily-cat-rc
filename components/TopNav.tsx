@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Flame, User, LogOut, Sun, Moon, Sparkles, Crown } from 'lucide-react';
+import { Flame, User, LogOut, Sun, Moon, Sparkles, Crown, Check } from 'lucide-react';
+import { createPortal } from 'react-dom';
 import { getMockStorage, setMockStorage, isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Profile } from '../types';
 import PremiumModal from './PremiumModal';
@@ -18,6 +19,8 @@ export default function TopNav() {
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [signOutSuccess, setSignOutSuccess] = useState(false);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [showSignedOutToast, setShowSignedOutToast] = useState(false);
 
   useEffect(() => {
@@ -107,6 +110,7 @@ export default function TopNav() {
 
   const handleLogout = async () => {
     setLoggingOut(true);
+    setSignOutSuccess(false);
     try {
       if (isSupabaseConfigured && supabase) {
         await supabase.auth.signOut();
@@ -117,7 +121,16 @@ export default function TopNav() {
     setMockStorage({ currentUser: null });
     setUser(null);
     window.dispatchEvent(new Event('user-state-change'));
-    router.push('/?action=signedout');
+    
+    // Set success phase
+    setSignOutSuccess(true);
+    
+    // Delay hiding the overlay and redirecting to let the user see the success screen
+    setTimeout(() => {
+      setLoggingOut(false);
+      setSignOutSuccess(false);
+      router.push('/?action=signedout');
+    }, 1500);
   };
 
   const isActive = (path: string) => pathname === path;
@@ -255,7 +268,7 @@ export default function TopNav() {
                     <button
                       onClick={() => {
                         setMenuOpen(false);
-                        handleLogout();
+                        setShowSignOutConfirm(true);
                       }}
                       className="w-full text-left px-4 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 flex items-center gap-1.5"
                     >
@@ -292,11 +305,79 @@ export default function TopNav() {
     </nav>
     <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
 
+    {/* Sign Out Confirmation Modal */}
+    {showSignOutConfirm && createPortal(
+      <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          onClick={() => setShowSignOutConfirm(false)}
+        />
+        
+        {/* Content Card */}
+        <div className="relative w-full max-w-sm overflow-hidden bg-white dark:bg-[#18181B] border border-[#E5E5E3] dark:border-[#27272A] rounded-2xl shadow-2xl animate-in fade-in-50 zoom-in-95 duration-200">
+          <div className="p-6 text-center flex flex-col items-center">
+            {/* Warning/SignOut Icon */}
+            <div className="w-12 h-12 bg-red-50 dark:bg-red-950/35 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mb-4">
+              <LogOut className="w-6 h-6 rotate-180 text-red-600 dark:text-red-400" />
+            </div>
+            
+            <h3 className="font-serif text-xl font-bold text-[#1A1A18] dark:text-[#FAFAF9] mb-2">
+              Sign Out
+            </h3>
+            
+            <p className="text-gray-500 dark:text-gray-400 font-sans text-xs mb-6 leading-relaxed">
+              Are you sure you want to sign out? You will need to log back in to access your dashboard and streak.
+            </p>
+
+            <div className="flex w-full gap-3">
+              <button
+                onClick={() => setShowSignOutConfirm(false)}
+                className="flex-1 px-4 py-2.5 rounded-lg border border-[#E5E5E3] dark:border-[#27272A] hover:bg-gray-50 dark:hover:bg-[#202022] text-[#1A1A18] dark:text-[#FAFAF9] font-mono font-bold text-xs transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowSignOutConfirm(false);
+                  handleLogout();
+                }}
+                className="flex-1 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-mono font-bold text-xs shadow-md transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )}
+
     {/* Fullscreen Sign-out Overlay */}
     {loggingOut && (
-      <div className="fixed inset-0 bg-[#FAFAF9]/60 dark:bg-[#18181B]/60 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-3">
-        <div className="w-8 h-8 rounded-full border-2 border-gray-200 border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
-        <span className="font-mono text-xs text-gray-500">Signing out securely...</span>
+      <div className="fixed inset-0 bg-[#FAFAF9]/80 dark:bg-[#18181B]/80 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-4 animate-in fade-in duration-200">
+        <div className="p-8 max-w-xs bg-white dark:bg-[#1C1C1E] border border-[#E5E5E3] dark:border-[#27272A] rounded-2xl shadow-2xl flex flex-col items-center justify-center text-center gap-4">
+          {signOutSuccess ? (
+            <>
+              <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/35 border border-emerald-100 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center animate-bounce">
+                <Check className="w-6 h-6" />
+              </div>
+              <div className="flex flex-col gap-1">
+                <h4 className="font-serif text-lg font-bold text-[#1A1A18] dark:text-[#FAFAF9]">
+                  Signed Out
+                </h4>
+                <p className="font-mono text-[10px] text-gray-500 uppercase tracking-wider">
+                  Signed out successfully
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="w-8 h-8 rounded-full border-2 border-gray-200 border-t-[#4F46E5] dark:border-t-[#6366F1] animate-spin" />
+              <span className="font-mono text-xs text-gray-500">Signing out securely...</span>
+            </>
+          )}
+        </div>
       </div>
     )}
 
